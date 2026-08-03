@@ -19,8 +19,15 @@ Endpoint
 
 - `POST /embed-upsert` — body: `{ chunks: [{ text, pdf_name?, metadata? }, ...] }`.
 
-The server will call OpenAI embeddings (model `text-embedding-3-small`) and insert rows into Supabase table `pdf_documents` with columns: `pdf_name`, `content`, `metadata`, `embedding`.
+The server will call Google Vertex AI (Gemini) embeddings (if `GOOGLE_API_KEY` and `GOOGLE_PROJECT_ID` are set) and insert rows into Supabase table `pdf_documents` with columns: `pdf_name`, `content`, `metadata`, `embedding`.
+
+Environment
+
+- `GOOGLE_API_KEY`: API key for Google Cloud (or use service account workflow)
+- `GOOGLE_PROJECT_ID`: your GCP project id
+- `GOOGLE_LOCATION`: region (default `us-central1`)
+- `GOOGLE_EMBEDDING_MODEL`: embedding model name (default `textembedding-gecko-001`)
 
 Security
 
-Use the `SUPABASE_SERVICE_ROLE_KEY` only on the server. Do not expose it to the browser.
+Use the `SUPABASE_SERVICE_ROLE_KEY` and `GOOGLE_API_KEY` only on the server. Do not expose them to the browser.

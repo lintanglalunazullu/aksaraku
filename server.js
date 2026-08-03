@@ -5,28 +5,43 @@ import { createClient } from '@supabase/supabase-js';
 const app = express();
 app.use(express.json({ limit: '12mb' }));
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.warn('Warning: set OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY in env');
+// Google / Vertex AI (Gemini) config
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_PROJECT_ID = process.env.GOOGLE_PROJECT_ID;
+const GOOGLE_LOCATION = process.env.GOOGLE_LOCATION || 'us-central1';
+const GOOGLE_EMBEDDING_MODEL = process.env.GOOGLE_EMBEDDING_MODEL || 'textembedding-gecko-001';
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.warn('Warning: set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in env');
 }
 
 const supabase = createClient(SUPABASE_URL || '', SUPABASE_SERVICE_ROLE_KEY || '');
 
 async function embedText(text) {
-  const resp = await fetch('https://api.openai.com/v1/embeddings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({ input: text, model: 'text-embedding-3-small' }),
-  });
-  const j = await resp.json();
-  if (!resp.ok) throw new Error(JSON.stringify(j));
-  return j.data?.[0]?.embedding;
+  // Prefer Google Vertex AI (Gemini) embeddings if configured
+  if (GOOGLE_API_KEY && GOOGLE_PROJECT_ID) {
+    const host = `${GOOGLE_LOCATION}-aiplatform.googleapis.com`;
+    const url = `https://${host}/v1/projects/${GOOGLE_PROJECT_ID}/locations/${GOOGLE_LOCATION}/publishers/google/models/${GOOGLE_EMBEDDING_MODEL}:embedText?key=${GOOGLE_API_KEY}`;
+
+    const body = { instances: [{ content: text }] };
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const j = await resp.json();
+    if (!resp.ok) throw new Error(JSON.stringify(j));
+
+    // Try multiple possible response shapes
+    const emb = j?.predictions?.[0]?.embedding || j?.predictions?.[0]?.value || j?.predictions?.[0] || j?.embeddings?.[0] || j?.data?.[0]?.embedding;
+    return emb;
+  }
+
+  throw new Error('No embedding provider configured. Set GOOGLE_API_KEY and GOOGLE_PROJECT_ID.');
 }
 
 // POST /embed-upsert
