@@ -405,7 +405,7 @@
     return wrapper;
   }
 
-  function handleSend(text) {
+  async function handleSend(text) {
     const trimmed = text.trim();
     if (!trimmed) return;
 
@@ -414,17 +414,143 @@
     sendBtn.disabled = true;
     scrollToBottom();
 
-    // Simulate AI "thinking" then reply (dummy JS, no real backend)
     const typing = appendTypingIndicator();
     scrollToBottom();
 
-    setTimeout(() => {
+    try {
+      const docs = await fetchPdfDocuments();
+      const reply = await generateGeminiReply(trimmed, docs);
       typing.remove();
-      appendAiReply(
-        "Terima kasih atas pertanyaannya! Ini adalah balasan simulasi dari Aksaraku. Hubungkan endpoint API kamu di sini untuk menghasilkan jawaban akademik yang sesungguhnya."
-      );
+      appendAiReply(reply);
+    } catch (error) {
+      typing.remove();
+      console.error(error);
+      appendAiReply("Maaf, terjadi kesalahan saat memproses request: " + error.message);
+    } finally {
+      sendBtn.disabled = false;
       scrollToBottom();
-    }, 1100);
+    }
+  }
+
+  async function fetchPdfDocuments() {
+    if (!window.supabase) {
+      console.warn('Supabase JS tidak tersedia.');
+      return [];
+    }
+
+    const SUPABASE_URL = 'https://pwohquppbydpycpqwxtg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b2hxdXBwYnlkcHljcHF3eHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MjYyNTUsImV4cCI6MjEwMTEwMjI1NX0.QUmKNTzaw88NZqb7ihR9Mgm7laJzm6_-M7Ktz0hNcGU';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const { data, error } = await supabaseClient
+      .from('pdf_documents')
+      .select('pdf_name, content')
+      .limit(5);
+
+    if (error) {
+      console.error('Supabase fetch pdf_documents error:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  function buildGeminiPrompt(question, docs) {
+    const docContext = docs.length
+      ? docs
+          .map((doc, index) => `Dokumen ${index + 1} (${doc.pdf_name}):\n${doc.content.slice(0, 500)}`)
+          .join('\n\n')
+      : 'Tidak ada data dokumen PDF tersedia untuk referensi.';
+
+    return `Gunakan informasi dokumen berikut sebagai konteks:\n\n${docContext}\n\nJawab pertanyaan berikut dengan singkat dan jelas:\n${question}`;
+  }
+
+  async function generateGeminiReply(question, docs) {
+    const GEMINI_API_KEY = 'AQ.Ab8RN6JqgIuaVnj5xLn9_KGGKPfR16vhBLbDPw5jTWqn-2XT5g';
+    const prompt = buildGeminiPrompt(question, docs);
+
+    if (window.genAI?.getGenerativeModel) {
+      const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
+      const response = await model.generate({
+        content: [
+          {
+            parts: [
+              {
+                text: prompt,
+              },
+            ],
+          },
+        ],
+      });
+
+      return getGeminiResultText(response);
+    }
+
+    const url = 'https://generativelanguage.googleapis.com/v1beta/interactions';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': GEMINI_API_KEY,
+      },
+      body: JSON.stringify({
+        model: 'gemini-3.6-flash',
+        input: prompt,
+      }),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error?.message || result.error || JSON.stringify(result));
+    }
+
+    return getGeminiResultText(result);
+  }
+
+  function getGeminiResultText(result) {
+    if (!result) return 'Gemini tidak mengembalikan jawaban.';
+
+    // 1) New "interaction" format: result.steps -> find model_output
+    if (Array.isArray(result.steps)) {
+      const step = result.steps.find((s) => s && s.type === 'model_output');
+      if (step && Array.isArray(step.content) && step.content.length > 0) {
+        // content item may be an object with text
+        const text = step.content[0].text || (step.content[0].text === '' ? '' : null);
+        if (typeof text === 'string') return text;
+      }
+    }
+
+    // 2) Candidate/content parts (older shapes)
+    const candidateText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (typeof candidateText === 'string') return candidateText;
+
+    // 3) Other response shapes
+    if (result?.output && Array.isArray(result.output) && result.output[0]?.content) return result.output[0].content;
+    if (result?.response?.text) return result.response.text;
+    if (result?.text) return result.text;
+
+    return 'Gemini tidak mengembalikan jawaban.';
+  }
+
+  async function callGeminiApi(url, prompt, mode) {
+    const body = mode === 'text'
+      ? { text: prompt }
+      : { contents: [ { parts: [ { text: prompt } ] } ] };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error?.message || result.error || JSON.stringify(result));
+    }
+
+    return getGeminiResultText(result);
   }
 
   chatForm.addEventListener("submit", (e) => {
