@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aksaraku AI Mentor</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          workspace: "#0B0F17",
+          sidebar: "#121824",
+          bubbleAi: "#181E2A",
+          bubbleUser: "#232B3B",
+          highlight: "#161B26",
+          inputbar: "#1A202C",
+        },
+        fontFamily: {
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+          serif: ["'Source Serif 4'", "Georgia", "serif"],
+        },
+        keyframes: {
+          twinkle: {
+            "0%, 100%": { opacity: 0.15 },
+            "50%": { opacity: 0.6 },
+          },
+          fadeUp: {
+            "0%": { opacity: 0, transform: "translateY(8px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
+        },
+        animation: {
+          twinkle: "twinkle 4s ease-in-out infinite",
+          fadeUp: "fadeUp 0.35s ease-out",
+        },
+      },
+    },
+  };
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+  * { scrollbar-width: thin; scrollbar-color: #2a3242 transparent; }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-thumb { background-color: #2a3242; border-radius: 999px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+
+  body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
+  .font-serif-heading { font-family: "Source Serif 4", Georgia, serif; }
+
+  .particle {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(139,92,246,0.9) 0%, rgba(139,92,246,0) 70%);
+  }
+</style>
+</head>
+
+<body class="bg-workspace text-[#F3F4F6] antialiased">
+
+<div class="flex h-screen w-full overflow-hidden">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="hidden md:flex flex-col w-[248px] shrink-0 bg-sidebar border-r border-white/5 h-full">
+
+    <!-- Brand -->
+    <div class="px-5 pt-6 pb-5">
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
+          <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="leading-tight">
+          <p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p>
+          <p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">AI MENTOR</p>
+        </div>
+      </div>
+
+      <button
+        id="newResearchBtn"
+        class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30"
+      >
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        New Research
+      </button>
+    </div>
+
+    <!-- Main nav -->
+    <nav class="px-3 mt-2 flex-1">
+      <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu</p>
+      <ul class="space-y-1">
+        <li>
+          <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-700/80 text-white text-sm font-semibold shadow-inner">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            Chat
+          </a>
+        </li>
+        <li>
+          <a href="./pages/library.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="library" class="w-4 h-4"></i>
+            Library
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bottom nav -->
+    <div class="px-3 pb-5 border-t border-white/5 pt-3">
+      <ul class="space-y-1">
+        <li>
+          <a href="./pages/support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+            Support
+          </a>
+        </li>
+        <li>
+          <a href="./pages/signout.html" data-auth-menu="signout" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            Sign Out
+          </a>
+        </li>
+        <li>
+          <a href="./login.html" data-auth-menu="login" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            Login
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN WORKSPACE ================= -->
+  <div class="relative flex flex-col flex-1 h-full overflow-hidden">
+
+    <!-- Ambient particles -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <span class="particle animate-twinkle" style="width:6px;height:6px; top:12%; left:18%; animation-delay:0s;"></span>
+      <span class="particle animate-twinkle" style="width:4px;height:4px; top:24%; left:62%; animation-delay:1.2s;"></span>
+      <span class="particle animate-twinkle" style="width:5px;height:5px; top:40%; left:85%; animation-delay:2.1s;"></span>
+      <span class="particle animate-twinkle" style="width:3px;height:3px; top:65%; left:8%; animation-delay:0.6s;"></span>
+      <span class="particle animate-twinkle" style="width:5px;height:5px; top:75%; left:45%; animation-delay:1.8s;"></span>
+      <span class="particle animate-twinkle" style="width:4px;height:4px; top:15%; left:40%; animation-delay:2.6s;"></span>
+      <span class="particle animate-twinkle" style="width:3px;height:3px; top:85%; left:70%; animation-delay:0.3s;"></span>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 flex items-center justify-between px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
+      <div class="flex items-center gap-3">
+        <button id="mobileMenuBtn" class="md:hidden text-[#9CA3AF] hover:text-white">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <h1 class="text-lg font-bold text-white">Chat</h1>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button class="relative text-[#9CA3AF] hover:text-white transition-colors">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-workspace"></span>
+        </button>
+        <div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
+          <a href="./pages/profile.html" data-profile-link="./pages/profile.html" class="w-full h-full flex items-center justify-center">
+            <img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" />
+            <span data-navbar-avatar-initials class="">LLZ</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Chat thread -->
+    <main id="chatThread" class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-40">
+      <div class="max-w-3xl mx-auto space-y-6">
+
+        <!-- AI greeting -->
+        <div class="flex items-start gap-3 animate-fadeUp">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
+            <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+          </div>
+          <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%]">
+            <p class="text-sm leading-relaxed text-[#F3F4F6]">
+              Halo! Saya <span class="font-semibold text-white">Aksaraku</span>, asisten belajar akademik kamu.
+              Saya siap membantu menjelaskan teori, merangkum bacaan, atau mendiskusikan tugas kuliahmu
+              secara mendalam. Apa yang ingin kamu pelajari hari ini?
+            </p>
+          </div>
+        </div>
+
+        <!-- User message -->
+        <div class="flex flex-col items-end animate-fadeUp">
+          <div class="bg-bubbleUser rounded-2xl rounded-tr-sm px-4 py-3.5 max-w-[85%]">
+            <p class="text-sm leading-relaxed text-[#F3F4F6]">
+              Bisa jelaskan Teori Keadilan John Rawls untuk tugas Filsafat Hukum saya?
+            </p>
+          </div>
+          <span class="text-[11px] text-[#6B7280] mt-1.5 mr-1">Terkirim • 10:45</span>
+        </div>
+
+        <!-- AI rich response card -->
+        <div class="flex items-start gap-3 animate-fadeUp">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
+            <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+          </div>
+
+          <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-5 py-5 max-w-[85%] w-full space-y-5">
+
+            <div>
+              <h2 class="font-serif-heading text-xl font-semibold text-white leading-snug">
+                Teori Keadilan John Rawls <span class="text-[#9CA3AF] font-normal text-base">(A Theory of Justice)</span>
+              </h2>
+              <p class="text-sm leading-relaxed text-[#9CA3AF] mt-2">
+                Rawls membangun teorinya di atas konsep <span class="text-[#F3F4F6] font-medium">"Justice as Fairness"</span> —
+                gagasan bahwa prinsip keadilan yang adil adalah prinsip yang akan disepakati oleh semua orang
+                dalam kondisi yang setara, sebelum mereka mengetahui posisi sosial mereka sendiri di masyarakat.
+              </p>
+            </div>
+
+            <!-- Two column cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="rounded-xl border border-purple-500/30 bg-highlight p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center">
+                    <i data-lucide="eye-off" class="w-4 h-4 text-purple-400"></i>
+                  </div>
+                  <p class="text-sm font-semibold text-white">Original Position</p>
+                </div>
+                <p class="text-xs text-[#9CA3AF] leading-relaxed">
+                  Kondisi hipotetis di balik <span class="text-purple-400 font-medium">"Tabir Ketidaktahuan"</span>
+                  (Veil of Ignorance), tempat prinsip keadilan dirumuskan secara netral.
+                </p>
+              </div>
+
+              <div class="rounded-xl border border-purple-500/30 bg-highlight p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center">
+                    <i data-lucide="scale" class="w-4 h-4 text-purple-400"></i>
+                  </div>
+                  <p class="text-sm font-semibold text-white">Liberty Principle</p>
+                </div>
+                <p class="text-xs text-[#9CA3AF] leading-relaxed">
+                  Setiap individu berhak atas kebebasan dasar yang setara dan seluas mungkin,
+                  selama tidak melanggar kebebasan orang lain.
+                </p>
+              </div>
+            </div>
+
+            <!-- Full width banner -->
+            <div class="rounded-xl border border-purple-500/30 bg-highlight p-4 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-purple-400"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-white mb-1">Difference Principle</p>
+                <p class="text-xs text-[#9CA3AF] leading-relaxed">
+                  Ketimpangan sosial dan ekonomi hanya dapat dibenarkan apabila memberikan manfaat
+                  terbesar bagi anggota masyarakat yang paling tidak diuntungkan.
+                </p>
+              </div>
+            </div>
+
+            <!-- Suggestion pills -->
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button class="suggestion-pill px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-purple-600/20 hover:border-purple-500/40 text-xs font-medium text-[#D1D5DB] hover:text-white transition-colors">
+                Jelaskan Veil of Ignorance
+              </button>
+              <button class="suggestion-pill px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-purple-600/20 hover:border-purple-500/40 text-xs font-medium text-[#D1D5DB] hover:text-white transition-colors">
+                Kritik Robert Nozick
+              </button>
+              <button class="suggestion-pill px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-purple-600/20 hover:border-purple-500/40 text-xs font-medium text-[#D1D5DB] hover:text-white transition-colors">
+                Contoh Penerapan Praktis
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Floating input bar -->
+    <div class="absolute bottom-0 left-0 right-0 z-20 px-4 md:px-8 pb-4 pt-8 bg-gradient-to-t from-workspace via-workspace/95 to-transparent">
+      <div class="max-w-3xl mx-auto">
+        <form id="chatForm" class="flex items-center gap-2 rounded-xl bg-inputbar border border-gray-700/70 px-3 py-2 shadow-xl shadow-black/30 focus-within:border-purple-500/50 transition-colors">
+          <button type="button" class="text-[#9CA3AF] hover:text-white transition-colors p-1.5 shrink-0" aria-label="Attach file">
+            <i data-lucide="paperclip" class="w-[18px] h-[18px]"></i>
+          </button>
+
+          <input
+            id="chatInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Tanya Aksaraku apa saja..."
+            class="flex-1 bg-transparent outline-none text-sm text-[#F3F4F6] placeholder:text-[#6B7280] py-1.5"
+          />
+
+          <button type="button" class="text-[#9CA3AF] hover:text-white transition-colors p-1.5 shrink-0" aria-label="Voice input">
+            <i data-lucide="mic" class="w-[18px] h-[18px]"></i>
+          </button>
+
+          <button
+            type="submit"
+            id="sendBtn"
+            class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+            disabled
+          >
+            <i data-lucide="arrow-up" class="w-4 h-4 text-white"></i>
+          </button>
+        </form>
+
+        <p class="text-center text-[11px] text-[#6B7280] mt-2.5">
+          Aksaraku dapat membuat kesalahan. Pertimbangkan untuk memeriksa informasi penting.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const chatThread = document.getElementById("chatThread");
+  const threadInner = chatThread.querySelector(".max-w-3xl");
+
+  // Enable / disable send button based on input content
+  chatInput.addEventListener("input", () => {
+    sendBtn.disabled = chatInput.value.trim().length === 0;
+  });
+
+  function formatTime() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, "0");
+    const m = String(now.getMinutes()).padStart(2, "0");
+    return `${h}:${m}`;
+  }
+
+  function scrollToBottom() {
+    chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
+  }
+
+  function appendUserMessage(text) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-end animate-fadeUp";
+    wrapper.innerHTML = `
+      <div class="bg-bubbleUser rounded-2xl rounded-tr-sm px-4 py-3.5 max-w-[85%]">
+        <p class="text-sm leading-relaxed text-[#F3F4F6]"></p>
+      </div>
+      <span class="text-[11px] text-[#6B7280] mt-1.5 mr-1">Terkirim • ${formatTime()}</span>
+    `;
+    wrapper.querySelector("p").textContent = text;
+    threadInner.appendChild(wrapper);
+    return wrapper;
+  }
+
+  function appendTypingIndicator() {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex items-start gap-3 animate-fadeUp";
+    wrapper.id = "typingIndicator";
+    wrapper.innerHTML = `
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
+        <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+      </div>
+      <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5">
+        <div class="flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:0ms"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:150ms"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:300ms"></span>
+        </div>
+      </div>
+    `;
+    threadInner.appendChild(wrapper);
+    lucide.createIcons();
+    return wrapper;
+  }
+
+  function appendAiReply(text) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex items-start gap-3 animate-fadeUp";
+    wrapper.innerHTML = `
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
+        <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+      </div>
+      <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%]">
+        <p class="text-sm leading-relaxed text-[#F3F4F6]"></p>
+      </div>
+    `;
+    wrapper.querySelector("p").textContent = text;
+    threadInner.appendChild(wrapper);
+    lucide.createIcons();
+    return wrapper;
+  }
+
+  function handleSend(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    appendUserMessage(trimmed);
+    chatInput.value = "";
+    sendBtn.disabled = true;
+    scrollToBottom();
+
+    // Simulate AI "thinking" then reply (dummy JS, no real backend)
+    const typing = appendTypingIndicator();
+    scrollToBottom();
+
+    setTimeout(() => {
+      typing.remove();
+      appendAiReply(
+        "Terima kasih atas pertanyaannya! Ini adalah balasan simulasi dari Aksaraku. Hubungkan endpoint API kamu di sini untuk menghasilkan jawaban akademik yang sesungguhnya."
+      );
+      scrollToBottom();
+    }, 1100);
+  }
+
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    handleSend(chatInput.value);
+  });
+
+  // Suggestion pill clicks fill (and send) the input
+  document.querySelectorAll(".suggestion-pill").forEach((pill) => {
+    pill.addEventListener("click", () => {
+      handleSend(pill.textContent);
+    });
+  });
+
+  // New Research button resets the thread (dummy behavior)
+  document.getElementById("newResearchBtn").addEventListener("click", () => {
+    chatInput.focus();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./js/auth-sidebar.js"></script>
+<script src="./js/navbar-profile.js"></script>
+</body>
+</html>

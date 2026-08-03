@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aksaraku — Pusat Bantuan FAQ</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          workspace: "#0B0F17",
+          sidebar: "#121824",
+          card: "#161B26",
+          card2: "#181E2A",
+        },
+        fontFamily: {
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+          serif: ["'Source Serif 4'", "Georgia", "serif"],
+        },
+        keyframes: {
+          fadeUp: {
+            "0%": { opacity: 0, transform: "translateY(8px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
+        },
+        animation: {
+          fadeUp: "fadeUp 0.35s ease-out",
+        },
+      },
+    },
+  };
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+  * { scrollbar-width: thin; scrollbar-color: #2a3242 transparent; }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-thumb { background-color: #2a3242; border-radius: 999px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+
+  body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
+  .font-serif-heading { font-family: "Source Serif 4", Georgia, serif; }
+
+  .accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+  .accordion-panel > div {
+    overflow: hidden;
+  }
+  .accordion-item[data-open="true"] .accordion-panel {
+    grid-template-rows: 1fr;
+  }
+  .accordion-item[data-open="true"] .accordion-chevron {
+    transform: rotate(180deg);
+  }
+  .accordion-chevron {
+    transition: transform 0.28s ease;
+  }
+</style>
+</head>
+
+<body class="bg-workspace text-[#F3F4F6] antialiased">
+
+<div class="flex h-screen w-full overflow-hidden">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="hidden md:flex flex-col w-[248px] shrink-0 bg-sidebar border-r border-white/5 h-full">
+
+    <!-- Brand -->
+    <div class="px-5 pt-6 pb-5">
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30 shrink-0">
+          <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="leading-tight">
+          <p class="text-[13px] font-extrabold tracking-wide text-white">Aksaraku</p>
+          <p class="text-[10px] text-[#6B7280]">AI Research Assistant</p>
+        </div>
+      </div>
+
+      <button
+        id="newResearchBtn"
+        class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30"
+      >
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        New Research
+      </button>
+    </div>
+
+    <!-- Main nav -->
+    <nav class="px-3 mt-2 flex-1">
+      <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu</p>
+      <ul class="space-y-1">
+        <li>
+          <a href="../index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            Chat
+          </a>
+        </li>
+        <li>
+          <a href="./library.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="library" class="w-4 h-4"></i>
+            Library
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bottom nav -->
+    <div class="px-3 pb-5 border-t border-white/5 pt-3 space-y-1">
+      <a href="./support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#5B4699] text-white text-sm font-semibold">
+        <i data-lucide="life-buoy" class="w-4 h-4"></i>
+        Support
+      </a>
+      <a href="./signout.html" data-auth-menu="signout" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        Sign Out
+      </a>
+      <a href="../login.html" data-auth-menu="login" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+        <i data-lucide="log-in" class="w-4 h-4"></i>
+        Login
+      </a>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN WORKSPACE ================= -->
+  <div class="relative flex flex-col flex-1 h-full overflow-hidden">
+
+    <!-- Header -->
+    <header class="relative z-10 flex items-center justify-between gap-4 px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
+      <div class="flex items-center gap-3 min-w-0">
+        <button id="mobileMenuBtn" class="md:hidden text-[#9CA3AF] hover:text-white shrink-0">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <h1 class="font-serif-heading text-lg md:text-xl font-semibold text-white">Frequently Asked Questions</h1>
+      </div>
+
+      <div class="flex items-center gap-3 md:gap-4">
+        <button class="relative text-[#9CA3AF] hover:text-white transition-colors">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-workspace"></span>
+        </button>
+      <div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
+          <a href="./profile.html" data-profile-link="./profile.html" class="w-full h-full flex items-center justify-center">
+            <img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" />
+            <span data-navbar-avatar-initials class="">LLZ</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <main class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 py-10">
+      <div class="max-w-3xl mx-auto space-y-10 pb-10">
+
+        <!-- Hero header -->
+        <div class="text-center animate-fadeUp">
+          <h2 class="font-serif-heading text-3xl md:text-4xl font-semibold text-white">Bagaimana kami bisa membantu?</h2>
+          <p class="text-sm text-[#9CA3AF] mt-3 max-w-xl mx-auto leading-relaxed">
+            Temukan jawaban atas pertanyaan umum mengenai penggunaan Aksaraku AI, manajemen akun,
+            dan solusi institusional.
+          </p>
+        </div>
+
+        <!-- ===== Category 1: Akun & Akses ===== -->
+        <section class="animate-fadeUp">
+          <div class="flex items-center gap-2 pb-3 mb-3 border-b border-white/10">
+            <i data-lucide="key-round" class="w-4.5 h-4.5 text-purple-300"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wide">Akun & Akses</h3>
+          </div>
+
+          <div class="space-y-2.5">
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Bagaimana cara memperbarui kata sandi saya?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Buka menu Settings, pilih tab Akun, lalu klik "Ubah Kata Sandi". Anda akan menerima
+                    tautan verifikasi melalui email institusi untuk mengatur kata sandi baru.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Apakah Aksaraku mendukung kolaborasi tim?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Ya. Paket Institusi memungkinkan Anda membuat ruang riset bersama, berbagi dokumen,
+                    dan meninjau anotasi AI secara kolaboratif dengan anggota tim lainnya.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Keamanan data penelitian saya terjamin?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Seluruh dokumen dienkripsi saat transit dan saat disimpan (encryption at rest).
+                    Data riset Anda tidak digunakan untuk melatih model tanpa izin eksplisit.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== Category 2: Fitur AI & Kapabilitas ===== -->
+        <section class="animate-fadeUp">
+          <div class="flex items-center gap-2 pb-3 mb-3 border-b border-white/10">
+            <i data-lucide="sparkles" class="w-4.5 h-4.5 text-purple-300"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wide">Fitur AI & Kapabilitas</h3>
+          </div>
+
+          <div class="space-y-2.5">
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Seberapa akurat data yang dihasilkan AI?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Aksaraku AI dirancang untuk akurasi tinggi pada konteks akademik, namun kami tetap
+                    menyarankan verifikasi manual untuk data statistik atau kutipan yang sangat spesifik.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Format dokumen apa saja yang didukung?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    PDF, DOCX, TXT, dan gambar hasil scan (dengan OCR otomatis) semuanya dapat diunggah
+                    langsung ke Library untuk dianalisis oleh AI.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Tips memberikan prompt yang efektif?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Sertakan konteks mata kuliah, format jawaban yang diinginkan, dan tingkat kedalaman
+                    analisis agar Aksaraku dapat menyusun respons yang lebih relevan.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== Category 3: Langganan & Pembayaran ===== -->
+        <section class="animate-fadeUp">
+          <div class="flex items-center gap-2 pb-3 mb-3 border-b border-white/10">
+            <i data-lucide="credit-card" class="w-4.5 h-4.5 text-purple-300"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wide">Langganan & Pembayaran</h3>
+          </div>
+
+          <div class="space-y-2.5">
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Metode pembayaran apa saja yang tersedia?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Kami menerima kartu kredit/debit, transfer bank virtual account, dan e-wallet populer
+                    di Indonesia seperti GoPay, OVO, dan Dana.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Bagaimana cara upgrade ke Premium?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Buka Settings > Langganan, pilih paket Premium Mahasiswa, lalu ikuti proses pembayaran.
+                    Fitur premium aktif secara otomatis setelah pembayaran dikonfirmasi.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-card border border-slate-800/60 rounded-xl" data-open="false">
+              <button type="button" class="accordion-trigger w-full flex items-center justify-between gap-4 text-left px-5 py-4">
+                <span class="text-sm font-medium text-[#F3F4F6]">Apakah ada paket untuk institusi/kampus?</span>
+                <i data-lucide="chevron-down" class="accordion-chevron w-4 h-4 text-[#9CA3AF] shrink-0"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  <p class="text-sm text-[#9CA3AF] leading-relaxed px-5 pb-4">
+                    Ya, kami menyediakan paket lisensi institusi dengan dashboard admin, kontrol akses
+                    berjenjang, dan dukungan onboarding khusus. Hubungi tim Kontak Support untuk detail.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Bottom CTA banner -->
+        <div class="bg-card border border-slate-800 rounded-2xl p-8 text-center animate-fadeUp">
+          <h3 class="font-serif-heading text-2xl font-semibold text-white">Masih butuh bantuan?</h3>
+          <p class="text-sm text-[#9CA3AF] mt-3 max-w-md mx-auto leading-relaxed">
+            Tim pendukung kami siap membantu Anda menyelesaikan kendala teknis atau pertanyaan lebih
+            lanjut seputar fitur Aksaraku.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+            <a
+              href="mailto:support@aksaraku.ai"
+              class="flex items-center gap-2 bg-[#222938] border border-slate-700 hover:bg-slate-700 transition-colors text-sm font-medium text-white px-5 py-2.5 rounded-lg"
+            >
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              Kirim Email
+            </a>
+            <a
+              href="https://wa.me/6285771571369"
+              class="flex items-center gap-2 bg-[#A3A8FF] hover:bg-[#9398FF] transition-colors text-sm font-medium text-[#121824] px-5 py-2.5 rounded-lg"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              Chat Langsung
+            </a>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-xs text-[#6B7280] pt-2">
+          © 2026 Aksaraku AI Research Assistant. Semua hak dilindungi undang-undang.
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // ---- Accordion toggle logic ----
+  document.querySelectorAll(".accordion-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const item = trigger.closest(".accordion-item");
+      const isOpen = item.getAttribute("data-open") === "true";
+      item.setAttribute("data-open", String(!isOpen));
+    });
+  });
+
+  document.getElementById("newResearchBtn").addEventListener("click", () => {
+    window.location.href = "aksaraku-ai-mentor.html";
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth-sidebar.js"></script>
+<script src="../js/navbar-profile.js"></script>
+</body>
+</html>

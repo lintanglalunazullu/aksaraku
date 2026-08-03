@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aksaraku — Pusat Bantuan & Dukungan</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          workspace: "#0B0F17",
+          sidebar: "#121824",
+          card: "#161B26",
+          card2: "#181E2A",
+        },
+        fontFamily: {
+          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+          serif: ["'Source Serif 4'", "Georgia", "serif"],
+        },
+        keyframes: {
+          fadeUp: {
+            "0%": { opacity: 0, transform: "translateY(8px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
+          pulseDot: {
+            "0%, 100%": { opacity: 1 },
+            "50%": { opacity: 0.4 },
+          },
+        },
+        animation: {
+          fadeUp: "fadeUp 0.35s ease-out",
+          pulseDot: "pulseDot 2s ease-in-out infinite",
+        },
+      },
+    },
+  };
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+  * { scrollbar-width: thin; scrollbar-color: #2a3242 transparent; }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-thumb { background-color: #2a3242; border-radius: 999px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+
+  body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
+  .font-serif-heading { font-family: "Source Serif 4", Georgia, serif; }
+</style>
+</head>
+
+<body class="bg-workspace text-[#F3F4F6] antialiased">
+
+<div class="flex h-screen w-full overflow-hidden">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="hidden md:flex flex-col w-[248px] shrink-0 bg-sidebar border-r border-white/5 h-full">
+
+    <!-- Brand -->
+    <div class="px-5 pt-6 pb-5">
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
+          <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+        </div>
+        <div class="leading-tight">
+          <p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p>
+          <p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">AI MENTOR</p>
+        </div>
+      </div>
+
+      <button
+        id="newResearchBtn"
+        class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30"
+      >
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        New Research
+      </button>
+    </div>
+
+    <!-- Main nav -->
+    <nav class="px-3 mt-2 flex-1">
+      <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu</p>
+      <ul class="space-y-1">
+        <li>
+          <a href="../index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            Chat
+          </a>
+        </li>
+        <li>
+          <a href="./library.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="library" class="w-4 h-4"></i>
+            Library
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bottom nav -->
+    <div class="px-3 pb-5 border-t border-white/5 pt-3">
+      <ul class="space-y-1">
+        <li>
+          <a href="./support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-700/80 text-white text-sm font-semibold shadow-inner">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+            Support
+          </a>
+        </li>
+        <li>
+          <a href="./signout.html" data-auth-menu="signout" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            Sign Out
+          </a>
+        </li>
+        <li>
+          <a href="../login.html" data-auth-menu="login" class="hidden flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            Login
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN WORKSPACE ================= -->
+  <div class="relative flex flex-col flex-1 h-full overflow-hidden">
+
+    <!-- Mobile top bar -->
+    <header class="md:hidden relative z-10 flex items-center justify-between px-5 h-14 shrink-0 border-b border-white/5">
+      <button id="mobileMenuBtn" class="text-[#9CA3AF] hover:text-white">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+      <span class="text-sm font-bold text-white">Support</span>
+      <div class="w-5"></div>
+    </header>
+
+    <!-- Scrollable content -->
+    <main class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 py-10 md:py-14">
+      <div class="max-w-5xl mx-auto space-y-12">
+
+        <!-- Header + search -->
+        <div class="text-center animate-fadeUp">
+          <h1 class="font-serif-heading text-3xl md:text-4xl font-semibold text-white">Pusat Bantuan & Dukungan</h1>
+          <p class="text-sm text-[#9CA3AF] mt-3 max-w-xl mx-auto leading-relaxed">
+            Temukan solusi cepat untuk kendala akademik Anda atau hubungi mentor AI dan tim support kami.
+          </p>
+
+          <div class="max-w-xl mx-auto mt-7 flex items-center gap-3 bg-card border border-slate-800 rounded-xl px-4 py-3 hover:border-slate-700 transition-colors cursor-text" id="searchBarWrapper">
+            <i data-lucide="search" class="w-4.5 h-4.5 text-[#6B7280] shrink-0"></i>
+            <input
+              id="helpSearchInput"
+              type="text"
+              placeholder="Cari panduan, FAQ, atau tutorial..."
+              class="flex-1 bg-transparent outline-none text-sm text-[#F3F4F6] placeholder:text-[#6B7280]"
+            />
+            <kbd id="shortcutBadge" class="hidden sm:flex items-center gap-0.5 text-[10px] font-semibold text-[#6B7280] border border-slate-700 rounded-md px-1.5 py-1 shrink-0">
+              CTRL K
+            </kbd>
+          </div>
+        </div>
+
+        <!-- Support category cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fadeUp">
+
+          <div class="bg-card border border-slate-800 hover:border-slate-700 rounded-xl p-6 transition-colors">
+            <div class="w-11 h-11 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+              <i data-lucide="help-circle" class="w-5 h-5 text-purple-300"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">FAQ</h3>
+            <p class="text-xs text-[#9CA3AF] mt-2 leading-relaxed">
+              Jawaban cepat untuk pertanyaan yang paling sering diajukan mengenai sistem Aksaraku AI.
+            </p>
+            <a href="./faq.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-300 hover:text-purple-200 transition-colors mt-4">
+              Lihat FAQ
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <div class="bg-card border border-slate-800 hover:border-slate-700 rounded-xl p-6 transition-colors">
+            <div class="w-11 h-11 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+              <i data-lucide="book-open" class="w-5 h-5 text-purple-300"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">Panduan Pengguna</h3>
+            <p class="text-xs text-[#9CA3AF] mt-2 leading-relaxed">
+              Dokumentasi lengkap cara menggunakan fitur riset, analisis teks, dan manajemen tugas.
+            </p>
+            <a href="./panduan.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-300 hover:text-purple-200 transition-colors mt-4">
+              Buka Panduan
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <div class="bg-card border border-slate-800 hover:border-slate-700 rounded-xl p-6 transition-colors">
+            <div class="w-11 h-11 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+              <i data-lucide="headset" class="w-5 h-5 text-purple-300"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">Kontak Support</h3>
+            <p class="text-xs text-[#9CA3AF] mt-2 leading-relaxed">
+              Hubungi tim teknis atau kirimkan tiket bantuan untuk masalah spesifik akun Anda.
+            </p>
+            <a href="./kontak.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-300 hover:text-purple-200 transition-colors mt-4">
+              Hubungi Kami
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+        </div>
+
+
+        <!-- Footer note -->
+        <p class="text-center text-sm text-[#6B7280] pb-6">
+          Tidak menemukan yang Anda cari? hubungi
+          <a href="lintanglalunazullu@gmail.com" class="text-[#9CA3AF] hover:text-white font-medium transition-colors">Email</a>
+          atau 
+          <a href="https://wa.me/6285771571369" class="text-[#9CA3AF] hover:text-white font-medium transition-colors">WhatsApp</a>.
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  const helpSearchInput = document.getElementById("helpSearchInput");
+  const shortcutBadge = document.getElementById("shortcutBadge");
+  const searchBarWrapper = document.getElementById("searchBarWrapper");
+
+  // Show Cmd K on Mac, Ctrl K elsewhere
+  const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+  shortcutBadge.textContent = isMac ? "⌘ K" : "CTRL K";
+
+  // Clicking anywhere in the search bar wrapper focuses the input
+  searchBarWrapper.addEventListener("click", () => helpSearchInput.focus());
+
+  // Global Cmd/Ctrl+K shortcut focuses the search input
+  document.addEventListener("keydown", (e) => {
+    const isShortcut = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
+    if (isShortcut) {
+      e.preventDefault();
+      helpSearchInput.focus();
+      helpSearchInput.select();
+    }
+    if (e.key === "Escape" && document.activeElement === helpSearchInput) {
+      helpSearchInput.blur();
+    }
+  });
+
+  // Hide the shortcut badge while typing, restore when input is cleared and blurred
+  helpSearchInput.addEventListener("focus", () => {
+    shortcutBadge.classList.add("opacity-0");
+  });
+  helpSearchInput.addEventListener("blur", () => {
+    shortcutBadge.classList.remove("opacity-0");
+  });
+
+  document.getElementById("newResearchBtn").addEventListener("click", () => {
+    window.location.href = "aksaraku-ai-mentor.html";
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth-sidebar.js"></script>
+<script src="../js/navbar-profile.js"></script>
+</body>
+</html>
