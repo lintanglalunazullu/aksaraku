@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aksaraku Admin - Upload PDF</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            workspace: "#0B0F17",
+            card: "#161B26",
+            card2: "#181E2A",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
+    * { scrollbar-width: thin; scrollbar-color: #2a3242 transparent; }
+    *::-webkit-scrollbar { width: 6px; height: 6px; }
+    *::-webkit-scrollbar-thumb { background-color: #2a3242; border-radius: 999px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+<body class="bg-workspace text-[#F3F4F6] min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-10">
+    <div class="mb-8 rounded-3xl border border-white/10 bg-card p-8 shadow-xl shadow-black/20">
+      <div class="mb-6">
+        <p class="text-xs uppercase tracking-[0.3em] text-[#8B8F9A]">Admin Upload</p>
+        <h1 class="mt-3 text-3xl font-bold text-white">Upload PDF & Simpan Embedding</h1>
+        <p class="mt-2 text-sm leading-relaxed text-[#9CA3AF]">
+          Unggah PDF, ekstrak teks, bagi ke chunk, dan kirim hasilnya ke backend untuk disimpan ke Supabase.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
+          <h2 class="text-lg font-semibold text-white">Langkah Upload</h2>
+          <ol class="mt-4 space-y-3 text-sm text-[#9CA3AF] list-decimal list-inside">
+            <li>Pilih file PDF.</li>
+            <li>Ekstrak teks dari semua halaman.</li>
+            <li>Bagi menjadi beberapa chunk supaya embedding bisa lebih akurat.</li>
+            <li>Kirim hasil ke backend untuk pembuatan vektor dan penyimpanan di Supabase.</li>
+          </ol>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
+          <label class="block text-sm font-semibold text-[#D1D5DB] mb-3" for="pdfFile">Pilih file PDF</label>
+          <input id="pdfFile" type="file" accept="application/pdf" class="w-full rounded-2xl border border-white/10 bg-[#0F172A] px-4 py-3 text-sm text-white" />
+          <button id="processBtn" class="mt-4 inline-flex items-center justify-center rounded-2xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-purple-500">
+            Proses & Upload
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
+          <h2 class="text-lg font-semibold text-white">Status</h2>
+          <pre id="status" class="mt-4 h-56 overflow-y-auto rounded-2xl bg-[#0F172A] p-4 text-sm leading-relaxed text-[#D1D5DB]"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.7.107/build/pdf.min.js"></script>
+  <script src="../js/pdf-upload.js"></script>
+</body>
+</html>
