@@ -84,8 +84,10 @@
 
     <div class="flex h-screen w-full overflow-hidden">
 
+        <div data-mobile-sidebar-overlay class="fixed inset-0 z-40 hidden bg-black/60 md:hidden"></div>
+
         <!-- ================= SIDEBAR ================= -->
-        <aside class="hidden md:flex flex-col w-[248px] shrink-0 bg-sidebar border-r border-white/5 h-full">
+        <aside data-mobile-sidebar class="fixed inset-y-0 left-0 z-50 hidden w-[248px] flex-col bg-sidebar border-r border-white/5 h-full md:static md:flex md:w-[248px] md:shrink-0">
 
             <!-- Brand -->
             <div class="px-5 pt-6 pb-5">
@@ -177,7 +179,7 @@
             <header
                 class="relative z-10 flex items-center justify-between gap-4 px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
                 <div class="flex items-center gap-3 min-w-0">
-                    <button id="mobileMenuBtn" class="md:hidden text-[#9CA3AF] hover:text-white shrink-0">
+                    <button id="mobileMenuBtn" data-mobile-menu-toggle class="md:hidden text-[#9CA3AF] hover:text-white shrink-0">
                         <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
                     <div
@@ -405,6 +407,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/auth-sidebar.js"></script>
 <script src="../js/navbar-profile.js"></script>
+<script src="../js/mobile-sidebar.js"></script>
 </body>
 
 </html>
