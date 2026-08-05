@@ -1,11 +1,6 @@
 const CHUNK_SIZE = 800;
 const CHUNK_OVERLAP = 100;
-const SUPABASE_URL = 'https://pwohquppbydpycpqwxtg.supabase.co';
-// Ganti dengan Supabase anon key yang benar dari Project Settings > API
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b2hxdXBwYnlkcHljcHF3eHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MjYyNTUsImV4cCI6MjEwMTEwMjI1NX0.QUmKNTzaw88NZqb7ihR9Mgm7laJzm6_-M7Ktz0hNcGU';
-
-const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-console.log('Supabase client initialized:', supabaseClient);
+const EMBED_UPSERT_URL = 'http://127.0.0.1:3000/embed-upsert';
 const pdfFileInput = document.getElementById('pdfFile');
 const processBtn = document.getElementById('processBtn');
 const statusOutput = document.getElementById('status');
@@ -61,15 +56,13 @@ async function processPdfFile() {
     const chunks = chunkText(text, CHUNK_SIZE, CHUNK_OVERLAP);
     logStatus(`Dibuat ${chunks.length} chunk.`);
 
-    // Contoh payload untuk dikirim ke backend.
     const payload = {
-      pdf_name: file.name,
-      chunks,
+      chunks: chunks.map((chunk) => ({ text: chunk, pdf_name: file.name })),
     };
 
-    logStatus('Mengirim chunk langsung ke Supabase...');
-    const result = await uploadChunksToSupabase(payload);
-    logStatus(`Upload selesai: ${result.length} chunk tersimpan di Supabase.`);
+    logStatus('Mengirim chunks ke server backend untuk embedding dan penyimpanan...');
+    const result = await uploadChunksToBackend(payload);
+    logStatus(`Selesai! ${result.length} chunk beserta embedding tersimpan di Supabase.`);
   } catch (error) {
     console.error(error);
     logStatus(`Terjadi kesalahan: ${error.message}`);
@@ -78,29 +71,25 @@ async function processPdfFile() {
 
 processBtn.addEventListener('click', processPdfFile);
 
-async function uploadChunksToSupabase(payload) {
-  if (!supabaseClient) {
-    throw new Error('Supabase belum diinisialisasi. Pastikan CDN Supabase sudah dimuat.');
+// 2. Fungsi unggah ke backend untuk embedding dan penyimpanan Supabase
+async function uploadChunksToBackend(payload) {
+  const response = await fetch(EMBED_UPSERT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    console.error('Backend embed-upsert error:', result);
+    throw new Error(result.error || result.message || 'Gagal melakukan embed-upsert ke backend.');
   }
 
-  const rows = payload.chunks.map((chunk) => ({
-    pdf_name: payload.pdf_name,
-    content: chunk,
-  }));
-
-  const { data, error } = await supabaseClient.from('pdf_documents').insert(rows).select();
-  console.log('Supabase insert result:', { data, error });
-
-  if (error) {
-    console.error('Supabase insert error:', error);
-    throw new Error(error.message || 'Gagal menyimpan chunk ke Supabase.');
+  if (!result.data || !Array.isArray(result.data)) {
+    throw new Error('Respons backend tidak valid: data embedding tidak ditemukan.');
   }
 
-  if (!data || data.length === 0) {
-    const message = 'Data tidak tersimpan: tidak ada baris dikembalikan. Periksa tabel atau aturan keamanan Supabase.';
-    console.error(message);
-    throw new Error(message);
-  }
-
-  return data;
+  return result.data;
 }
