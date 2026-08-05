@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import fetch from 'node-fetch';
 
-const [filePath = 'embeddings.json', endpoint = 'http://127.0.0.1:3000/embed-upsert-raw'] = process.argv.slice(2);
+const [filePath = 'embeddings.json', endpoint = 'https://aksaraku-gamma.vercel.app/embed-upsert-raw'] = process.argv.slice(2);
 
 async function main() {
   const payloadText = await fs.readFile(filePath, 'utf8');
