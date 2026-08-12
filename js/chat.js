@@ -5,6 +5,7 @@ const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 const chatThread = document.getElementById("chatThread");
 const threadInner = chatThread.querySelector(".max-w-3xl");
+const chatInputShell = document.querySelector(".chat-input-shell");
 
 const SUPABASE_URL = 'https://pwohquppbydpycpqwxtg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b2hxdXBwYnlkcHljcHF3eHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MjYyNTUsImV4cCI6MjEwMTEwMjI1NX0.QUmKNTzaw88NZqb7ihR9Mgm7laJzm6_-M7Ktz0hNcGU';
@@ -32,8 +33,14 @@ function formatTime() {
     return `${h}:${m}`;
 }
 
-function scrollToBottom() {
-    chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
+function scrollToBottom(force = false) {
+    const distanceFromBottom = chatThread.scrollHeight - chatThread.clientHeight - chatThread.scrollTop;
+    const isNearBottom = distanceFromBottom < 120;
+    if (force || isNearBottom) {
+        requestAnimationFrame(() => {
+            chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
+        });
+    }
 }
 
 function clearChatThread() {
@@ -188,6 +195,26 @@ function normalizeSessionTitle(text) {
 
     return title;
 }
+
+function updateChatInputHeight() {
+    if (!chatInputShell) return;
+    const height = chatInputShell.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--chat-input-height', `${Math.ceil(height)}px`);
+}
+
+window.addEventListener('resize', () => {
+    updateChatInputHeight();
+    scrollToBottom(true);
+});
+if (window.ResizeObserver && chatInputShell) {
+    new ResizeObserver(() => {
+        updateChatInputHeight();
+        scrollToBottom(true);
+    }).observe(chatInputShell);
+}
+
+updateChatInputHeight();
+chatInput.addEventListener('focus', () => scrollToBottom(true));
 
 async function updateSessionTitleFromMessage(sessionId, messageText) {
     if (!sessionId || !messageText) return;
