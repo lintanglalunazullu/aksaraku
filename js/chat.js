@@ -6,6 +6,18 @@ const sendBtn = document.getElementById("sendBtn");
 const chatThread = document.getElementById("chatThread");
 const threadInner = chatThread.querySelector(".max-w-3xl");
 
+const SUPABASE_URL = 'https://pwohquppbydpycpqwxtg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b2hxdXBwYnlkcHljcHF3eHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MjYyNTUsImV4cCI6MjEwMTEwMjI1NX0.QUmKNTzaw88NZqb7ihR9Mgm7laJzm6_-M7Ktz0hNcGU';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const sessionList = document.getElementById('sessionList');
+const sessionStatus = document.getElementById('sessionStatus');
+const CHAT_SESSIONS_TABLE = 'chat_sessions';
+const CHAT_MESSAGES_TABLE = 'chat_messages';
+const DEFAULT_SESSION_TITLE = 'Sesi chat baru';
+let currentSessionId = null;
+let currentSessionTitle = DEFAULT_SESSION_TITLE;
+let currentUserId = null;
+
 const BACKEND_CHAT_URL = "https://aksaraku-api-one.vercel.app/chat";
 
 // Enable / disable send button based on input content
@@ -22,6 +34,242 @@ function formatTime() {
 
 function scrollToBottom() {
     chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
+}
+
+function clearChatThread() {
+    threadInner.innerHTML = '';
+}
+
+function renderSessionStatus(text) {
+    if (sessionStatus) {
+        sessionStatus.textContent = text;
+    }
+}
+
+async function getSupabaseSession() {
+    if (!supabaseClient) return null;
+
+    try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        return session;
+    } catch (error) {
+        console.error('Gagal mendapatkan session Supabase:', error);
+        return null;
+    }
+}
+
+async function loadSessionList() {
+    if (!supabaseClient || !currentUserId || !sessionList) return;
+
+    const { data, error } = await supabaseClient
+        .from(CHAT_SESSIONS_TABLE)
+        .select('id,title,updated_at')
+        .eq('user_id', currentUserId)
+        .order('updated_at', { ascending: false })
+        .limit(6);
+
+    if (error) {
+        console.error('Gagal memuat sesi chat:', error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        sessionList.innerHTML = '<p class="text-xs leading-relaxed text-[#9CA3AF]">Belum ada sesi chat. Klik New Research untuk mulai.</p>';
+        return;
+    }
+
+    sessionList.innerHTML = '';
+    data.forEach((session) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'w-full text-left rounded-xl border border-white/5 bg-[#111827] px-3 py-2 text-xs text-[#D1D5DB] hover:border-purple-500/40 hover:bg-white/5 transition-colors';
+        button.textContent = session.title || 'Sesi chat baru';
+        button.addEventListener('click', () => switchChatSession(session.id));
+        sessionList.appendChild(button);
+    });
+}
+
+async function createChatSession(title = DEFAULT_SESSION_TITLE) {
+    if (!supabaseClient || !currentUserId) return null;
+
+    const { data, error } = await supabaseClient
+        .from(CHAT_SESSIONS_TABLE)
+        .insert({ user_id: currentUserId, title })
+        .select('id,title')
+        .single();
+
+    if (error) {
+        console.error('Gagal membuat sesi chat:', error);
+        return null;
+    }
+
+    currentSessionId = data?.id || null;
+    currentSessionTitle = data?.title || DEFAULT_SESSION_TITLE;
+    if (currentSessionId) {
+        localStorage.setItem('aksaraku_chat_session_id', currentSessionId);
+    }
+
+    await loadSessionList();
+    return currentSessionId;
+}
+
+async function updateSessionTitle(sessionId, title) {
+    if (!supabaseClient || !sessionId || !title) return;
+
+    const { error } = await supabaseClient
+        .from(CHAT_SESSIONS_TABLE)
+        .update({ title })
+        .eq('id', sessionId);
+
+    if (error) {
+        console.error('Gagal mengupdate judul sesi:', error);
+    }
+}
+
+async function getCurrentSessionId() {
+    if (!supabaseClient || !currentUserId) return null;
+    if (currentSessionId) return currentSessionId;
+
+    const storedSessionId = localStorage.getItem('aksaraku_chat_session_id');
+    if (storedSessionId) {
+        const { data, error } = await supabaseClient
+            .from(CHAT_SESSIONS_TABLE)
+            .select('id')
+            .eq('id', storedSessionId)
+            .eq('user_id', currentUserId)
+            .single();
+
+        if (!error && data) {
+            currentSessionId = storedSessionId;
+            return currentSessionId;
+        }
+    }
+
+    const { data, error } = await supabaseClient
+        .from(CHAT_SESSIONS_TABLE)
+        .select('id')
+        .eq('user_id', currentUserId)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .single();
+
+    if (!error && data) {
+        currentSessionId = data.id;
+        localStorage.setItem('aksaraku_chat_session_id', currentSessionId);
+        return currentSessionId;
+    }
+
+    return createChatSession();
+}
+
+async function ensureChatSession() {
+    if (!supabaseClient) return null;
+
+    const session = await getSupabaseSession();
+    if (!session?.user) return null;
+
+    currentUserId = session.user.id;
+    return getCurrentSessionId();
+}
+
+function normalizeSessionTitle(text) {
+    if (!text) return DEFAULT_SESSION_TITLE;
+
+    let title = text.trim();
+    if (title.length > 50) {
+        title = title.slice(0, 50).trim();
+        const lastSpace = title.lastIndexOf(' ');
+        if (lastSpace > 0) {
+            title = title.slice(0, lastSpace);
+        }
+        title += '...';
+    }
+
+    return title;
+}
+
+async function updateSessionTitleFromMessage(sessionId, messageText) {
+    if (!sessionId || !messageText) return;
+
+    const normalized = normalizeSessionTitle(messageText);
+    if (normalized === DEFAULT_SESSION_TITLE) return;
+
+    if (normalized !== currentSessionTitle) {
+        currentSessionTitle = normalized;
+        await updateSessionTitle(sessionId, normalized);
+        await loadSessionList();
+    }
+}
+
+async function saveChatMessage(sessionId, role, text) {
+    if (!supabaseClient || !sessionId || !text) return;
+
+    const { error } = await supabaseClient
+        .from(CHAT_MESSAGES_TABLE)
+        .insert({ session_id: sessionId, role, content: text });
+
+    if (error) {
+        console.error('Gagal menyimpan pesan chat:', error);
+    }
+}
+
+async function loadChatMessages(sessionId) {
+    if (!supabaseClient || !sessionId) return [];
+
+    const { data, error } = await supabaseClient
+        .from(CHAT_MESSAGES_TABLE)
+        .select('role,content,inserted_at')
+        .eq('session_id', sessionId)
+        .order('inserted_at', { ascending: true });
+
+    if (error) {
+        console.error('Gagal memuat pesan chat:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+async function switchChatSession(sessionId) {
+    if (!sessionId || sessionId === currentSessionId) return;
+
+    currentSessionId = sessionId;
+    localStorage.setItem('aksaraku_chat_session_id', sessionId);
+    clearChatThread();
+    await loadSessionMessages(sessionId);
+    renderSessionStatus('Riwayat sesi dimuat.');
+}
+
+async function loadSessionMessages(sessionId) {
+    const messages = await loadChatMessages(sessionId);
+    if (!messages.length) return;
+
+    messages.forEach((msg) => {
+        if (msg.role === 'user') {
+            appendUserMessage(msg.content);
+        } else {
+            appendAiReply(msg.content);
+        }
+    });
+
+    scrollToBottom();
+}
+
+async function initChatSessionHistory() {
+    const session = await getSupabaseSession();
+    if (!session || !session.user) {
+        renderSessionStatus('Silakan login Supabase agar riwayat chat tersimpan.');
+        return;
+    }
+
+    currentUserId = session.user.id;
+    await loadSessionList();
+    const sessionId = await getCurrentSessionId();
+    if (sessionId) {
+        clearChatThread();
+        await loadSessionMessages(sessionId);
+    }
 }
 
 function appendUserMessage(text) {
@@ -106,6 +354,10 @@ function createSourcesHtml(sources) {
 }
 
 function appendAiReplyWithSources(answer, sources) {
+    if (!Array.isArray(sources) || sources.length === 0) {
+        return appendAiReply(answer);
+    }
+
     const wrapper = document.createElement("div");
     wrapper.className = "flex items-start gap-3 animate-fadeUp";
     wrapper.innerHTML = `
@@ -156,7 +408,13 @@ async function handleSend(text) {
   const trimmed = text.trim();
   if (!trimmed) return;
 
+  const sessionId = await ensureChatSession();
   appendUserMessage(trimmed);
+  if (sessionId) {
+    await saveChatMessage(sessionId, 'user', trimmed);
+    await updateSessionTitleFromMessage(sessionId, trimmed);
+  }
+
   chatInput.value = "";
   sendBtn.disabled = true;
   scrollToBottom();
@@ -168,6 +426,9 @@ async function handleSend(text) {
     const { answer, sources } = await fetchChatResponse(trimmed);
     typing.remove();
     appendAiReplyWithSources(answer, sources);
+    if (sessionId) {
+      await saveChatMessage(sessionId, 'assistant', answer);
+    }
   } catch (error) {
     typing.remove();
     console.error(error);
@@ -180,9 +441,9 @@ async function handleSend(text) {
 
 
 // Form submit handler
-chatForm.addEventListener("submit", (e) => {
+chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    handleSend(chatInput.value);
+    await handleSend(chatInput.value);
 });
 
 // Suggestion pill click handler
@@ -193,6 +454,21 @@ document.querySelectorAll(".suggestion-pill").forEach((pill) => {
 });
 
 // New Research button
-document.getElementById("newResearchBtn").addEventListener("click", () => {
+document.getElementById("newResearchBtn").addEventListener("click", async () => {
+    clearChatThread();
+    currentSessionId = null;
+    localStorage.removeItem('aksaraku_chat_session_id');
+    renderSessionStatus('Sesi baru dibuat. Silakan mulai chat.');
+    await createChatSession('Sesi chat baru');
     chatInput.focus();
 });
+
+async function initChatSessionHistoryWrapper() {
+    await initChatSessionHistory();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChatSessionHistoryWrapper);
+} else {
+    initChatSessionHistoryWrapper();
+}
