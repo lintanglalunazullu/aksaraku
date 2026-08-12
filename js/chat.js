@@ -6,7 +6,7 @@ const sendBtn = document.getElementById("sendBtn");
 const chatThread = document.getElementById("chatThread");
 const threadInner = chatThread.querySelector(".max-w-3xl");
 
-const BACKEND_CHAT_URL = "http://localhost:3000/chat";
+const BACKEND_CHAT_URL = "https://aksaraku-api-one.vercel.app/chat";
 
 // Enable / disable send button based on input content
 chatInput.addEventListener("input", () => {
