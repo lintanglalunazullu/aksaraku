@@ -5,7 +5,6 @@ const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 const chatThread = document.getElementById("chatThread");
 const threadInner = chatThread.querySelector(".max-w-3xl");
-const chatInputShell = document.querySelector(".chat-input-shell");
 
 const SUPABASE_URL = 'https://pwohquppbydpycpqwxtg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3b2hxdXBwYnlkcHljcHF3eHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MjYyNTUsImV4cCI6MjEwMTEwMjI1NX0.QUmKNTzaw88NZqb7ihR9Mgm7laJzm6_-M7Ktz0hNcGU';
@@ -33,14 +32,8 @@ function formatTime() {
     return `${h}:${m}`;
 }
 
-function scrollToBottom(force = false) {
-    const distanceFromBottom = chatThread.scrollHeight - chatThread.clientHeight - chatThread.scrollTop;
-    const isNearBottom = distanceFromBottom < 120;
-    if (force || isNearBottom) {
-        requestAnimationFrame(() => {
-            chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
-        });
-    }
+function scrollToBottom() {
+    chatThread.scrollTo({ top: chatThread.scrollHeight, behavior: "smooth" });
 }
 
 function clearChatThread() {
@@ -195,26 +188,6 @@ function normalizeSessionTitle(text) {
 
     return title;
 }
-
-function updateChatInputHeight() {
-    if (!chatInputShell) return;
-    const height = chatInputShell.getBoundingClientRect().height;
-    document.documentElement.style.setProperty('--chat-input-height', `${Math.ceil(height)}px`);
-}
-
-window.addEventListener('resize', () => {
-    updateChatInputHeight();
-    scrollToBottom(true);
-});
-if (window.ResizeObserver && chatInputShell) {
-    new ResizeObserver(() => {
-        updateChatInputHeight();
-        scrollToBottom(true);
-    }).observe(chatInputShell);
-}
-
-updateChatInputHeight();
-chatInput.addEventListener('focus', () => scrollToBottom(true));
 
 async function updateSessionTitleFromMessage(sessionId, messageText) {
     if (!sessionId || !messageText) return;
@@ -381,10 +354,6 @@ function createSourcesHtml(sources) {
 }
 
 function appendAiReplyWithSources(answer, sources) {
-    if (!Array.isArray(sources) || sources.length === 0) {
-        return appendAiReply(answer);
-    }
-
     const wrapper = document.createElement("div");
     wrapper.className = "flex items-start gap-3 animate-fadeUp";
     wrapper.innerHTML = `
@@ -431,6 +400,11 @@ async function fetchChatResponse(question) {
     };
 }
 
+function userAskedForSources(text) {
+    if (!text) return false;
+    return /\b(sumber|dokumen|referensi|rujukan|bukti|source|sumbernya|dokumennya|referensinya)\b/i.test(text);
+}
+
 async function handleSend(text) {
   const trimmed = text.trim();
   if (!trimmed) return;
@@ -452,7 +426,12 @@ async function handleSend(text) {
   try {
     const { answer, sources } = await fetchChatResponse(trimmed);
     typing.remove();
-    appendAiReplyWithSources(answer, sources);
+    const includeSources = userAskedForSources(trimmed) && sources.length > 0;
+    if (includeSources) {
+      appendAiReplyWithSources(answer, sources);
+    } else {
+      appendAiReply(answer);
+    }
     if (sessionId) {
       await saveChatMessage(sessionId, 'assistant', answer);
     }

@@ -56,7 +56,6 @@
     * {
       scrollbar-width: thin;
       scrollbar-color: #2a3242 transparent;
-      box-sizing: border-box;
     }
 
     *::-webkit-scrollbar {
@@ -73,18 +72,8 @@
       background: transparent;
     }
 
-    html,
-    body {
-      height: 100%;
-      min-height: 100dvh;
-      overflow-x: hidden;
-      overflow-y: hidden;
-    }
-
     body {
       font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-      overscroll-behavior-y: none;
-      touch-action: pan-y;
     }
 
     .font-serif-heading {
@@ -96,178 +85,12 @@
       border-radius: 9999px;
       background: radial-gradient(circle, rgba(139, 92, 246, 0.9) 0%, rgba(139, 92, 246, 0) 70%);
     }
-
-    header.chat-header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: rgba(11, 15, 23, 0.96);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    #chatThread {
-      display: flex;
-      flex-direction: column;
-      padding-bottom: calc(var(--chat-input-height, 5.25rem) + env(safe-area-inset-bottom) + 0.75rem);
-      scroll-padding-bottom: calc(var(--chat-input-height, 5.25rem) + env(safe-area-inset-bottom) + 0.75rem);
-      min-width: 0;
-      overscroll-behavior-y: contain;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y;
-    }
-
-    .chat-message-list {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      gap: 1.5rem;
-    }
-
-    .chat-input-shell {
-      position: relative;
-      z-index: 20;
-      flex-shrink: 0;
-      padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
-      background: rgba(11, 15, 23, 0.96);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      transform: translateZ(0);
-      will-change: transform;
-    }
-
-    .workspace-shell {
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .page-shell {
-      min-height: 100dvh;
-    }
-
-    @media (min-width: 1024px) {
-      .chat-input-shell {
-        position: relative;
-      }
-    }
-
-    .chat-input-shell .chat-input-form {
-      gap: 0.75rem;
-      padding: 0.75rem;
-    }
-
-    .chat-input-shell .chat-input-form button {
-      width: 2.35rem;
-      height: 2.35rem;
-    }
-
-    .chat-input-shell .chat-input-form input {
-      min-height: 2.5rem;
-      font-size: 0.95rem;
-    }
-
-    .chat-input-shell .chat-input-note {
-      margin-top: 0.4rem;
-      font-size: 0.76rem;
-      line-height: 1.4;
-    }
-
-    .bg-bubbleAi,
-    .bg-bubbleUser {
-      max-width: min(92%, 36rem);
-      padding: 0.9rem 1rem;
-    }
-
-    .bg-bubbleAi {
-      margin-bottom: 0.8rem;
-    }
-
-    .bg-bubbleUser {
-      margin-bottom: 0.8rem;
-    }
-
-    .chat-message-row {
-      gap: 0.75rem;
-    }
-
-    .chat-message-row .text-sm {
-      font-size: 0.93rem;
-    }
-
-    .suggestion-pill {
-      padding: 0.65rem 1rem;
-      font-size: 0.72rem;
-    }
-
-    @media (max-width: 768px) {
-      #chatThread {
-        padding-top: 0.75rem;
-        padding-left: 0.85rem;
-        padding-right: 0.85rem;
-      }
-
-      header.chat-header {
-        padding-left: 1rem;
-        padding-right: 1rem;
-        min-height: 3.3rem;
-      }
-
-      .chat-input-shell {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        padding-top: 0.75rem;
-      }
-
-      .chat-input-shell .chat-input-form {
-        border-radius: 1.25rem;
-      }
-
-      .bg-bubbleAi,
-      .bg-bubbleUser {
-        padding: 0.75rem 0.9rem;
-      }
-
-      .bg-bubbleAi p,
-      .bg-bubbleUser p {
-        font-size: 0.92rem;
-      }
-
-      .chat-message-row {
-        gap: 0.65rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .chat-input-shell {
-        padding-left: 0.6rem;
-        padding-right: 0.6rem;
-      }
-
-      .chat-input-shell .chat-input-form {
-        gap: 0.5rem;
-        padding: 0.7rem;
-      }
-
-      .chat-input-shell .chat-input-form button {
-        width: 2.1rem;
-        height: 2.1rem;
-      }
-
-      .chat-input-shell .chat-input-form input {
-        min-height: 2.25rem;
-      }
-
-      .bg-bubbleAi,
-      .bg-bubbleUser {
-        max-width: min(94%, 28rem);
-      }
-    }
   </style>
 </head>
 
 <body class="bg-workspace text-[#F3F4F6] antialiased">
 
-  <div class="page-shell flex h-[100dvh] w-full overflow-hidden">
+  <div class="flex h-screen w-full overflow-hidden">
 
     <div data-mobile-sidebar-overlay class="fixed inset-0 z-40 hidden bg-black/60 md:hidden"></div>
 
@@ -351,7 +174,7 @@
     </aside>
 
     <!-- ================= MAIN WORKSPACE ================= -->
-<div class="workspace-shell relative flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div class="relative flex flex-col flex-1 h-full overflow-hidden">
 
       <!-- Ambient particles -->
       <div class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -373,7 +196,7 @@
 
       <!-- Header -->
       <header
-        class="chat-header relative z-10 flex items-center justify-between px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
+        class="relative z-10 flex items-center justify-between px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
         <div class="flex items-center gap-3">
           <button id="mobileMenuBtn" data-mobile-menu-toggle class="md:hidden text-[#9CA3AF] hover:text-white">
             <i data-lucide="menu" class="w-5 h-5"></i>
@@ -398,8 +221,8 @@
       </header>
 
       <!-- Chat thread -->
-      <main id="chatThread" class="relative z-10 flex-1 min-h-0 overflow-y-auto px-4 md:px-8 pt-6 pb-6 touch-auto">
-        <div class="chat-message-list max-w-3xl mx-auto space-y-6">
+      <main id="chatThread" class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-40">
+        <div class="max-w-3xl mx-auto space-y-6">
 
           <!-- AI greeting -->
           <div class="flex items-start gap-3 animate-fadeUp">
@@ -515,10 +338,11 @@
       </main>
 
       <!-- Floating input bar -->
-      <div class="chat-input-shell">
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 px-4 md:px-8 pb-4 pt-8 bg-gradient-to-t from-workspace via-workspace/95 to-transparent">
         <div class="max-w-3xl mx-auto">
           <form id="chatForm"
-            class="chat-input-form flex items-center gap-2 rounded-2xl bg-inputbar border border-gray-700/70 px-3 py-2 shadow-xl shadow-black/30 focus-within:border-purple-500/50 transition-colors">
+            class="flex items-center gap-2 rounded-xl bg-inputbar border border-gray-700/70 px-3 py-2 shadow-xl shadow-black/30 focus-within:border-purple-500/50 transition-colors">
             <button type="button" class="text-[#9CA3AF] hover:text-white transition-colors p-1.5 shrink-0"
               aria-label="Attach file">
               <i data-lucide="paperclip" class="w-[18px] h-[18px]"></i>
@@ -539,7 +363,7 @@
             </button>
           </form>
 
-          <p class="chat-input-note text-center text-[11px] text-[#6B7280] mt-2.5">
+          <p class="text-center text-[11px] text-[#6B7280] mt-2.5">
             Aksaraku dapat membuat kesalahan. Pertimbangkan untuk memeriksa informasi penting.
           </p>
         </div>
