@@ -318,10 +318,34 @@ function appendAiReply(text) {
         <p class="text-sm leading-relaxed text-[#F3F4F6] whitespace-pre-wrap"></p>
       </div>
     `;
-    wrapper.querySelector("p").textContent = text;
+    wrapper.querySelector("p").innerHTML = renderChatMarkdown(removeAccuracyNotice(text));
     threadInner.appendChild(wrapper);
     lucide.createIcons();
     return wrapper;
+}
+
+function escapeChatHtml(text) {
+    return String(text ?? '').replace(/[&<>'"]/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+    }[character]));
+}
+
+function renderChatMarkdown(text) {
+    return escapeChatHtml(text)
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+}
+
+function removeAccuracyNotice(text) {
+    return String(text ?? '')
+        .replace(/\*{0,2}\s*Tidak ada nilai akurasi yang tersedia dalam dokumen\s*\*{0,2}\s*[.!]?/gi, '')
+        .replace(/[ \t]{2,}/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
 }
 
 function truncateText(text, maxChars = 320) {
@@ -343,10 +367,10 @@ function createSourcesHtml(sources) {
             return `
                 <div class="rounded-xl border border-white/10 bg-[#111827] p-4 space-y-2">
                     <div class="flex items-center justify-between gap-3 text-xs text-[#9CA3AF]">
-                        <span class="font-semibold text-white">File: ${fileName}</span>
-                        <span>${accuracy}</span>
+                        <span class="font-semibold text-white">File: ${escapeChatHtml(fileName)}</span>
+                        <span>${escapeChatHtml(accuracy)}</span>
                     </div>
-                    <p class="text-xs text-[#9CA3AF] leading-relaxed">${snippet}</p>
+                    <p class="text-xs text-[#9CA3AF] leading-relaxed">${renderChatMarkdown(snippet)}</p>
                 </div>
             `;
         })
@@ -371,7 +395,7 @@ function appendAiReplyWithSources(answer, sources) {
       </div>
     `;
 
-    wrapper.querySelector("p").textContent = answer;
+    wrapper.querySelector("p").innerHTML = renderChatMarkdown(removeAccuracyNotice(answer));
     threadInner.appendChild(wrapper);
     lucide.createIcons();
     return wrapper;
@@ -395,7 +419,7 @@ async function fetchChatResponse(question) {
     }
 
     return {
-        answer: payload.answer,
+        answer: removeAccuracyNotice(payload.answer),
         sources: Array.isArray(payload.sources) ? payload.sources : [],
     };
 }
