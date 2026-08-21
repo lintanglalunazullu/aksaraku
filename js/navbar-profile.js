@@ -65,7 +65,7 @@
       if (link) {
         link.setAttribute('aria-label', fullName);
         if (!user) {
-          link.setAttribute('href', '/login.html');
+          link.setAttribute('href', link.getAttribute('data-login-link') || '/login.html');
         } else {
           link.setAttribute('href', link.getAttribute('data-profile-link') || '#');
         }

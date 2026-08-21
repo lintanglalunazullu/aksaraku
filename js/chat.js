@@ -18,7 +18,7 @@ let currentSessionId = null;
 let currentSessionTitle = DEFAULT_SESSION_TITLE;
 let currentUserId = null;
 
-const BACKEND_CHAT_URL = "https://aksaraku-api-one.vercel.app/chat";
+const BACKEND_CHAT_URL = "http://localhost:3000/chat";
 
 // Enable / disable send button based on input content
 chatInput.addEventListener("input", () => {
