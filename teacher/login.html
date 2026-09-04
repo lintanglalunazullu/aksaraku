@@ -5,24 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aksaraku Teacher - Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { workspace: '#0B0F17', sidebar: '#121824' }, fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'], serif: ["'Source Serif 4'", 'Georgia', 'serif'] } } } };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
-<body class="min-h-screen bg-slate-950 text-white flex items-center justify-center px-5">
-  <main class="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl">
-    <p class="text-xs font-bold tracking-[0.25em] text-emerald-400">AKSARAKU TEACHER</p>
-    <h1 class="mt-3 text-3xl font-bold">Masuk ke ruang teacher</h1>
-    <p class="mt-2 text-sm text-slate-400">Gunakan email dan password Supabase Anda.</p>
+<body class="min-h-screen bg-workspace text-[#F3F4F6] antialiased">
+  <div class="flex min-h-screen items-center justify-center px-5 py-10">
+  <main class="w-full max-w-md rounded-2xl border border-white/10 bg-sidebar p-8 shadow-2xl">
+    <div class="flex items-center gap-2.5"><div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30"><i data-lucide="book-open" class="h-5 w-5 text-white"></i></div><div class="leading-tight"><p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p><p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">TEACHER PORTAL</p></div></div>
+    <p class="mt-8 text-xs font-semibold tracking-[0.2em] text-purple-400">AREA TERBATAS</p>
+    <h1 class="font-serif-heading mt-3 text-3xl font-bold text-white">Masuk sebagai teacher</h1>
+    <p class="mt-2 text-sm text-[#9CA3AF]">Gunakan email dan password Supabase Anda.</p>
     <form id="teacherLoginForm" class="mt-8 space-y-4">
       <label class="block text-sm text-slate-300">Email
-        <input id="email" type="email" required autocomplete="username" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 outline-none focus:border-emerald-400" />
+        <input id="email" type="email" required autocomplete="username" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0B0F17] px-3 py-3 outline-none focus:border-purple-500" />
       </label>
       <label class="block text-sm text-slate-300">Password
-        <input id="password" type="password" required autocomplete="current-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 outline-none focus:border-emerald-400" />
+        <input id="password" type="password" required autocomplete="current-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-[#0B0F17] px-3 py-3 outline-none focus:border-purple-500" />
       </label>
       <p id="loginMessage" class="hidden rounded-lg border border-red-400/30 bg-red-400/10 px-3 py-2 text-sm text-red-200" role="alert"></p>
-      <button id="loginButton" type="submit" class="w-full rounded-lg bg-emerald-500 px-4 py-3 font-bold text-slate-950 hover:bg-emerald-400 disabled:opacity-50">Masuk</button>
+      <button id="loginButton" type="submit" class="flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 font-semibold text-white shadow-md shadow-purple-900/30 hover:bg-purple-700 disabled:opacity-50"><i data-lucide="log-in" class="h-4 w-4"></i><span>Masuk ke ruang teacher</span></button>
     </form>
     <a href="../login.html" class="mt-5 block text-center text-sm text-slate-400 hover:text-white">Kembali ke pilihan login</a>
   </main>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/config.js"></script>
   <script src="../js/auth-role.js"></script>
@@ -69,6 +78,7 @@
     });
 
     redirectTeacher().catch(() => showError('Sesi login tidak dapat diperiksa.'));
+    lucide.createIcons();
   </script>
 </body>
 </html>

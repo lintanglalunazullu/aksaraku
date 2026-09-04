@@ -109,9 +109,8 @@
 
       <!-- Action buttons -->
       <button
-        id="btn-logout"
+        id="confirmLogoutBtn"
         type="button"
-        onclick="logout()"
         class="w-full py-3 px-4 rounded-xl bg-[#C4C7FF] text-[#121824] font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-all mb-3"
       >
         Ya, Keluar
@@ -149,7 +148,6 @@
   function openLogoutModal() {
     overlay.classList.remove("hidden");
     overlay.classList.add("flex");
-    // restart animations each time it opens
     overlay.classList.remove("animate-fadeIn");
     modalCard.classList.remove("animate-scaleIn");
     void overlay.offsetWidth; // force reflow to restart animation
@@ -181,7 +179,6 @@
     if (e.target === overlay) closeLogoutModal();
   });
 
-  // Confirm logout (dummy handler)
   confirmBtn.addEventListener("click", () => {
     confirmBtn.disabled = true;
     confirmBtn.classList.add("opacity-70", "cursor-not-allowed");
@@ -193,10 +190,11 @@
       Keluar...
     `;
 
-    // Simulate sign-out request latency, then redirect to login
-    setTimeout(() => {
-      window.location.href = "aksaraku-login.html";
-    }, 900);
+    logout().catch(() => {
+      confirmBtn.disabled = false;
+      confirmBtn.classList.remove("opacity-70", "cursor-not-allowed");
+      confirmBtn.textContent = "Ya, Keluar";
+    });
   });
 </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
