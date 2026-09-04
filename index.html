@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aksaraku AI Mentor</title>
+  <link rel="icon" type="image/png" href="./image/logo.png" />
+  <link rel="stylesheet" href="./css/brand.css" />
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -83,7 +85,7 @@
     .particle {
       position: absolute;
       border-radius: 9999px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.9) 0%, rgba(139, 92, 246, 0) 70%);
+      background: radial-gradient(circle, rgba(11, 37, 69, 0.9) 0%, rgba(11, 37, 69, 0) 70%);
     }
   </style>
 </head>
@@ -102,8 +104,8 @@
       <div class="px-5 pt-6 pb-5">
         <div class="flex items-center gap-2.5">
           <div
-            class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
-            <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+            class="brand-logo-container">
+            <img src="./image/logo.png" alt="Aksaraku" class="brand-logo" />
           </div>
           <div class="leading-tight">
             <p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p>
@@ -191,10 +193,6 @@
         </div>
 
         <div class="flex items-center gap-4">
-          <button class="relative text-[#9CA3AF] hover:text-white transition-colors">
-            <i data-lucide="bell" class="w-5 h-5"></i>
-            <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-workspace"></span>
-          </button>
           <div data-navbar-avatar
             class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
             <a href="./pages/profile.html" data-profile-link="./pages/profile.html"

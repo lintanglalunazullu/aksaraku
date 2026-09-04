@@ -36,6 +36,9 @@ async function checkIfLoggedIn() {
     const { data: { session } } = await supabaseClient.auth.getSession();
 
     if (session) {
+      if (window.ensureAksarakuProfile) {
+        await window.ensureAksarakuProfile(supabaseClient, session.user);
+      }
       const role = window.getAksarakuUserRole
         ? await window.getAksarakuUserRole(supabaseClient, session.user)
         : null;

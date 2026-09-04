@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aksaraku AI — Login Portal</title>
+  <link rel="icon" type="image/png" href="./image/logo.png" />
+  <link rel="stylesheet" href="./css/brand.css" />
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -59,7 +61,7 @@
     }
 
     .bg-radial-glow {
-      background: radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.16) 0%, rgba(139, 92, 246, 0) 55%);
+      background: radial-gradient(circle at 30% 20%, rgba(11, 37, 69, 0.16) 0%, rgba(11, 37, 69, 0) 55%);
     }
 
     .watermark-ring {
@@ -74,11 +76,11 @@
 
   <div class="relative min-h-screen w-full flex flex-col overflow-hidden">
 
-    <!-- Top-left brand logo -->
-    <div class="absolute top-6 left-6 md:top-8 md:left-8 z-20 flex items-center gap-2.5">
+  <!-- Top-left brand logo -->
+    <div class="absolute top-6 left-6 md:top-8 md:left-8 z-20 flex items-center">
       <div
-        class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
-        <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+        class="brand-logo-container">
+        <img src="./image/logo.png" alt="Aksaraku" class="brand-logo" />
       </div>
       <span class="text-base font-bold text-white">Aksaraku AI</span>
     </div>
@@ -107,7 +109,7 @@
             Masa Depan
             <br />
             <span
-              class="italic bg-gradient-to-r from-purple-300 via-[#9D8CFC] to-indigo-300 bg-clip-text text-transparent">
+              class="italic text-white">
               Akademik Cerdas.
             </span>
           </h1>
@@ -120,17 +122,11 @@
           <!-- Feature highlights -->
           <div class="grid grid-cols-2 gap-3 mt-8">
             <div class="rounded-xl bg-featureCard/70 border border-slate-800 p-4">
-              <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center mb-2.5">
-                <i data-lucide="sparkles" class="w-4 h-4 text-[#9D8CFC]"></i>
-              </div>
               <p class="text-sm font-semibold text-white">Analisis AI</p>
               <p class="text-xs text-[#6B7280] mt-1 leading-relaxed">Data akademik real-time.</p>
             </div>
 
             <div class="rounded-xl bg-featureCard/70 border border-slate-800 p-4">
-              <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center mb-2.5">
-                <i data-lucide="shield-check" class="w-4 h-4 text-[#9D8CFC]"></i>
-              </div>
               <p class="text-sm font-semibold text-white">Akses Aman</p>
               <p class="text-xs text-[#6B7280] mt-1 leading-relaxed">Enkripsi tingkat institusi.</p>
             </div>
@@ -179,7 +175,7 @@
             Atau
             <a href="lintanglalunazullu@gmail.com" class="text-purple-300 hover:text-purple-200 font-medium transition-colors">Kirim Ke Email</a>
           </p>
-          <a href="./teacher/login.html" class="mt-6 block text-center text-sm font-semibold text-emerald-300 hover:text-emerald-200">Login sebagai teacher</a>
+          
 
         </div>
       </section>

@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Aksaraku AI — Logout Confirmation</title>
+<link rel="icon" type="image/png" href="../image/logo.png" />
+<link rel="stylesheet" href="../css/brand.css" />
 
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -60,8 +62,8 @@
   <!-- ================= DEMO PAGE BEHIND THE MODAL ================= -->
   <div class="relative h-full w-full flex flex-col items-center justify-center px-6">
     <div class="flex items-center gap-2.5 mb-6">
-      <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
-        <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+      <div class="brand-logo-container">
+        <img src="../image/logo.png" alt="Aksaraku" class="brand-logo" />
       </div>
       <span class="text-base font-bold text-white">Aksaraku AI</span>
     </div>
@@ -94,7 +96,7 @@
 
       <!-- Top hero icon -->
       <div class="w-16 h-16 rounded-full bg-[#202538] flex items-center justify-center mb-6">
-        <i data-lucide="log-out" class="text-[#9D8CFC] w-7 h-7"></i>
+        <i data-lucide="log-out" class="text-[#0B2545] w-7 h-7"></i>
       </div>
 
       <!-- Title -->
@@ -111,7 +113,7 @@
       <button
         id="confirmLogoutBtn"
         type="button"
-        class="w-full py-3 px-4 rounded-xl bg-[#C4C7FF] text-[#121824] font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-all mb-3"
+        class="w-full py-3 px-4 rounded-xl bg-[#0B2545] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#123A63] transition-all mb-3"
       >
         Ya, Keluar
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -128,7 +130,7 @@
       <!-- Footer brand badge -->
       <div class="flex items-center justify-center gap-2 text-slate-400 text-sm font-semibold">
         <div class="w-6 h-6 rounded-md bg-[#202538] flex items-center justify-center">
-          <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-[#9D8CFC]"></i>
+          <img src="../image/logo.png" alt="Aksaraku" class="brand-logo brand-logo--small" />
         </div>
         Aksaraku AI
       </div>

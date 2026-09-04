@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aksaraku — Profil Pengguna</title>
+    <link rel="icon" type="image/png" href="../image/logo.png" />
+    <link rel="stylesheet" href="../css/brand.css" />
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -93,8 +95,8 @@
             <div class="px-5 pt-6 pb-5">
                 <div class="flex items-center gap-2.5">
                     <div
-                        class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30">
-                        <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+                        class="brand-logo-container">
+                        <img src="../image/logo.png" alt="Aksaraku" class="brand-logo" />
                     </div>
                     <div class="leading-tight">
                         <p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p>
@@ -153,19 +155,9 @@
                     <button id="mobileMenuBtn" data-mobile-menu-toggle class="md:hidden text-[#9CA3AF] hover:text-white shrink-0">
                         <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
-                    <div class="hidden sm:flex items-center gap-2 bg-card2 border border-white/5 rounded-lg px-3 py-2 w-full max-w-sm">
-                        <i data-lucide="search" class="w-4 h-4 text-[#6B7280] shrink-0"></i>
-                        <input type="text" placeholder="Cari aktivitas atau dokumen..."
-                            class="bg-transparent outline-none text-sm text-[#F3F4F6] placeholder:text-[#6B7280] w-full" />
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-4 shrink-0">
-                    <button class="relative text-[#9CA3AF] hover:text-white transition-colors">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-workspace"></span>
-                    </button>
-
                     <div class="hidden sm:flex items-center gap-2.5">
                         <div class="text-right leading-tight">
                             <p data-profile-header-name class="text-sm font-semibold text-white">User</p>
@@ -242,8 +234,8 @@
                                     <p class="text-[10px] font-semibold uppercase tracking-wider text-[#6B7280]">
                                         Informasi Login</p>
                                     <div data-profile-badges class="flex flex-wrap gap-2 mt-2">
-                                        <span class="text-xs font-medium bg-[#202538] text-[#9D8CFC] px-3 py-1 rounded-full">Google</span>
-                                        <span class="text-xs font-medium bg-[#202538] text-[#9D8CFC] px-3 py-1 rounded-full">Supabase</span>
+                                        <span class="text-xs font-medium bg-[#202538] text-[#0B2545] px-3 py-1 rounded-full">Google</span>
+                                        <span class="text-xs font-medium bg-[#202538] text-[#0B2545] px-3 py-1 rounded-full">Supabase</span>
                                     </div>
                                 </div>
                             </div>

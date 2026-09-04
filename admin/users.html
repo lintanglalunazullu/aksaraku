@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aksaraku Admin - User</title>
+  <link rel="icon" type="image/png" href="../image/logo.png" />
+  <link rel="stylesheet" href="../css/brand.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.tailwindcss.css" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -12,14 +14,14 @@
     #usersTable_wrapper select, #usersTable_wrapper input { border-radius: .5rem; border: 1px solid #334155; background: #020617; color: #e2e8f0; padding: .45rem .65rem; }
     #usersTable_wrapper .dt-info, #usersTable_wrapper .dt-length, #usersTable_wrapper .dt-search { color: #94a3b8; font-size: .8rem; }
     #usersTable_wrapper .dt-paging-button { color: #cbd5e1 !important; }
-    #usersTable_wrapper .dt-paging-button.current { background: #7c3aed !important; border-color: #7c3aed !important; color: white !important; }
+    #usersTable_wrapper .dt-paging-button.current { background: #0B2545 !important; border-color: #0B2545 !important; color: white !important; }
   </style>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
   <div class="flex min-h-screen">
     <aside class="hidden w-64 shrink-0 border-r border-white/5 bg-[#121824] p-5 md:block">
       <div class="flex items-center gap-3">
-        <div class="rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-2"><i data-lucide="book-open" class="h-5 w-5"></i></div>
+        <div class="brand-logo-container"><img src="../image/logo.png" alt="Aksaraku" class="brand-logo" /></div>
         <div><p class="font-extrabold tracking-wide">AKSARAKU</p><p class="text-[10px] font-semibold tracking-[0.2em] text-purple-400">ADMIN PORTAL</p></div>
       </div>
       <a href="./chat.html" class="mt-8 flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-3 py-2.5 text-sm font-bold hover:bg-purple-500"><i data-lucide="message-circle-plus" class="h-4 w-4"></i>Chat Baru</a>

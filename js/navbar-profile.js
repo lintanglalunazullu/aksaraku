@@ -92,8 +92,8 @@
 
     if (profileBadgesEl) {
       profileBadgesEl.innerHTML = `
-        <span class="text-xs font-medium bg-[#202538] text-[#9D8CFC] px-3 py-1 rounded-full">${provider}</span>
-        <span class="text-xs font-medium bg-[#202538] text-[#9D8CFC] px-3 py-1 rounded-full">Supabase</span>
+        <span class="text-xs font-medium bg-[#202538] text-[#0B2545] px-3 py-1 rounded-full">${provider}</span>
+        <span class="text-xs font-medium bg-[#202538] text-[#0B2545] px-3 py-1 rounded-full">Supabase</span>
       `;
     }
   }

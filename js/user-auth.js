@@ -4,6 +4,7 @@
     const { data: { session } = {} } = client
       ? await client.auth.getSession()
       : { data: {} };
+    if (session?.user) await window.ensureAksarakuProfile(client, session.user);
     const role = await window.getAksarakuUserRole(client, session?.user);
 
     if (!session?.user) {

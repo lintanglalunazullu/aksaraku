@@ -33,10 +33,11 @@ on public.profiles for select
 to authenticated
 using (id = auth.uid() or public.is_admin());
 
-create policy "profiles_insert_admin"
+drop policy if exists "profiles_insert_admin" on public.profiles;
+create policy "profiles_insert_own_or_admin"
 on public.profiles for insert
 to authenticated
-with check (public.is_admin());
+with check (id = auth.uid() or public.is_admin());
 
 create policy "profiles_update_admin_or_own"
 on public.profiles for update

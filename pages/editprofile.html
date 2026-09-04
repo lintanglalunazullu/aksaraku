@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Aksaraku — Edit Profil</title>
+<link rel="icon" type="image/png" href="../image/logo.png" />
+<link rel="stylesheet" href="../css/brand.css" />
 
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -78,7 +80,7 @@
   .form-input::placeholder { color: #6B7280; }
   .form-input:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: #0B2545;
   }
 </style>
 </head>
@@ -95,8 +97,8 @@
     <!-- Brand -->
     <div class="px-5 pt-6 pb-5">
       <div class="flex items-center gap-2.5">
-        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-900/30 shrink-0">
-          <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+        <div class="brand-logo-container">
+          <img src="../image/logo.png" alt="Aksaraku" class="brand-logo" />
         </div>
         <div class="leading-tight">
           <p class="text-[13px] font-extrabold tracking-wide text-white">Aksaraku</p>
@@ -106,7 +108,7 @@
 
       <button
         id="newResearchBtn"
-        class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#C4C7FF] hover:bg-[#B3B7FF] transition-colors text-sm font-semibold text-[#121824] py-2.5"
+        class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#0B2545] hover:bg-[#123A63] transition-colors text-sm font-semibold text-white py-2.5"
       >
         <i data-lucide="plus" class="w-4 h-4"></i>
         New Research
@@ -154,21 +156,9 @@
         <button id="mobileMenuBtn" data-mobile-menu-toggle class="md:hidden text-[#9CA3AF] hover:text-white shrink-0">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
-        <div class="hidden sm:flex items-center gap-2 bg-card2 border border-white/5 rounded-lg px-3 py-2 w-full max-w-xs">
-          <i data-lucide="search" class="w-4 h-4 text-[#6B7280] shrink-0"></i>
-          <input
-            type="text"
-            placeholder="Search research papers..."
-            class="bg-transparent outline-none text-sm text-[#F3F4F6] placeholder:text-[#6B7280] w-full"
-          />
-        </div>
       </div>
 
       <div class="flex items-center gap-4 shrink-0">
-        <button class="relative text-[#9CA3AF] hover:text-white transition-colors">
-          <i data-lucide="bell" class="w-5 h-5"></i>
-          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-500 ring-2 ring-workspace"></span>
-        </button>
       <div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
           <a href="./profile.html" data-profile-link="./profile.html" class="w-full h-full flex items-center justify-center">
             <img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" />
@@ -207,7 +197,7 @@
               <button
                 type="button"
                 id="uploadAvatarBtn"
-                class="bg-[#C4C7FF] text-[#121824] font-semibold py-2 px-5 rounded-full hover:bg-[#B3B7FF] transition-colors text-sm"
+                class="bg-[#0B2545] text-white font-semibold py-2 px-5 rounded-full hover:bg-[#123A63] transition-colors text-sm"
               >
                 Ubah Foto Profil
               </button>
@@ -322,7 +312,7 @@
             <button
               type="submit"
               id="saveChangesBtn"
-              class="bg-[#C4C7FF] text-[#121824] font-semibold py-2.5 px-6 rounded-xl hover:bg-[#B3B7FF] transition-colors text-sm"
+              class="bg-[#0B2545] text-white font-semibold py-2.5 px-6 rounded-xl hover:bg-[#123A63] transition-colors text-sm"
             >
               Simpan Perubahan
             </button>
