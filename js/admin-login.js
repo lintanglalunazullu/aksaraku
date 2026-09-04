@@ -28,9 +28,10 @@ async function redirectIfLoggedIn() {
   if (!supabaseClient) return;
 
   const { data: { session } } = await supabaseClient.auth.getSession();
-  if (isEmailProvider(session?.user)) {
+  const role = await window.getAksarakuUserRole(supabaseClient, session?.user);
+  if (isEmailProvider(session?.user) && role === 'admin') {
     window.location.replace('./index.html');
-  } else if (session) {
+  } else if (session && role !== 'admin') {
     await supabaseClient.auth.signOut();
   }
 }
@@ -67,9 +68,10 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  if (!isEmailProvider(data.user)) {
+  const role = await window.getAksarakuUserRole(supabaseClient, data.user);
+  if (!isEmailProvider(data.user) || role !== 'admin') {
     await supabaseClient.auth.signOut();
-    showMessage('Akun ini bukan akun email admin. Gunakan akun provider email.');
+    showMessage('Akun ini tidak memiliki role admin.');
     loginButton.disabled = false;
     loginButton.querySelector('span').textContent = 'Masuk ke dashboard';
     return;

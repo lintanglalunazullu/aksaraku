@@ -17,6 +17,11 @@ const DEFAULT_SESSION_TITLE = 'Sesi chat baru';
 let currentSessionId = null;
 let currentSessionTitle = DEFAULT_SESSION_TITLE;
 let currentUserId = null;
+const CHAT_CONTEXT = document.body.dataset.role || 'user';
+
+function getSessionStorageKey() {
+    return `aksaraku_chat_session_id_${CHAT_CONTEXT}_${currentUserId}`;
+}
 
 const BACKEND_CHAT_URL = `${window.AKSARAKU_CONFIG.API_BASE_URL}/chat`;
 
@@ -107,7 +112,7 @@ async function createChatSession(title = DEFAULT_SESSION_TITLE) {
     currentSessionId = data?.id || null;
     currentSessionTitle = data?.title || DEFAULT_SESSION_TITLE;
     if (currentSessionId) {
-        localStorage.setItem('aksaraku_chat_session_id', currentSessionId);
+        localStorage.setItem(getSessionStorageKey(), currentSessionId);
     }
 
     await loadSessionList();
@@ -131,7 +136,7 @@ async function getCurrentSessionId() {
     if (!supabaseClient || !currentUserId) return null;
     if (currentSessionId) return currentSessionId;
 
-    const storedSessionId = localStorage.getItem('aksaraku_chat_session_id');
+    const storedSessionId = localStorage.getItem(getSessionStorageKey());
     if (storedSessionId) {
         const { data, error } = await supabaseClient
             .from(CHAT_SESSIONS_TABLE)
@@ -156,7 +161,7 @@ async function getCurrentSessionId() {
 
     if (!error && data) {
         currentSessionId = data.id;
-        localStorage.setItem('aksaraku_chat_session_id', currentSessionId);
+        localStorage.setItem(getSessionStorageKey(), currentSessionId);
         return currentSessionId;
     }
 
@@ -235,7 +240,7 @@ async function switchChatSession(sessionId) {
     if (!sessionId || sessionId === currentSessionId) return;
 
     currentSessionId = sessionId;
-    localStorage.setItem('aksaraku_chat_session_id', sessionId);
+    localStorage.setItem(getSessionStorageKey(), sessionId);
     clearChatThread();
     await loadSessionMessages(sessionId);
     renderSessionStatus('Riwayat sesi dimuat.');
@@ -487,7 +492,7 @@ document.querySelectorAll(".suggestion-pill").forEach((pill) => {
 document.getElementById("newResearchBtn").addEventListener("click", async () => {
     clearChatThread();
     currentSessionId = null;
-    localStorage.removeItem('aksaraku_chat_session_id');
+    localStorage.removeItem(getSessionStorageKey());
     renderSessionStatus('Sesi baru dibuat. Silakan mulai chat.');
     await createChatSession('Sesi chat baru');
     chatInput.focus();

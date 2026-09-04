@@ -36,10 +36,19 @@ async function checkIfLoggedIn() {
     const { data: { session } } = await supabaseClient.auth.getSession();
 
     if (session) {
-      const providers = session.user?.app_metadata?.providers || [];
-      const provider = session.user?.app_metadata?.provider;
-      const isEmailUser = provider === 'email' || providers.includes('email');
-      window.location.href = isEmailUser ? './admin/index.html' : './index.html';
+      const role = window.getAksarakuUserRole
+        ? await window.getAksarakuUserRole(supabaseClient, session.user)
+        : null;
+      const paths = {
+        admin: './admin/index.html',
+        teacher: './teacher/chat.html',
+        user: './index.html',
+      };
+      if (paths[role]) {
+        window.location.href = paths[role];
+      } else {
+        await supabaseClient.auth.signOut();
+      }
     }
   } catch (error) {
     console.error('Gagal memeriksa sesi login:', error);

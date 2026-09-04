@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aksaraku Teacher - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-white flex items-center justify-center px-5">
+  <main class="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl">
+    <p class="text-xs font-bold tracking-[0.25em] text-emerald-400">AKSARAKU TEACHER</p>
+    <h1 class="mt-3 text-3xl font-bold">Masuk ke ruang teacher</h1>
+    <p class="mt-2 text-sm text-slate-400">Gunakan email dan password Supabase Anda.</p>
+    <form id="teacherLoginForm" class="mt-8 space-y-4">
+      <label class="block text-sm text-slate-300">Email
+        <input id="email" type="email" required autocomplete="username" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 outline-none focus:border-emerald-400" />
+      </label>
+      <label class="block text-sm text-slate-300">Password
+        <input id="password" type="password" required autocomplete="current-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 outline-none focus:border-emerald-400" />
+      </label>
+      <p id="loginMessage" class="hidden rounded-lg border border-red-400/30 bg-red-400/10 px-3 py-2 text-sm text-red-200" role="alert"></p>
+      <button id="loginButton" type="submit" class="w-full rounded-lg bg-emerald-500 px-4 py-3 font-bold text-slate-950 hover:bg-emerald-400 disabled:opacity-50">Masuk</button>
+    </form>
+    <a href="../login.html" class="mt-5 block text-center text-sm text-slate-400 hover:text-white">Kembali ke pilihan login</a>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/auth-role.js"></script>
+  <script>
+    const client = window.createAksarakuClient();
+    const form = document.getElementById('teacherLoginForm');
+    const message = document.getElementById('loginMessage');
+    const button = document.getElementById('loginButton');
+
+    function showError(text) {
+      message.textContent = text;
+      message.classList.remove('hidden');
+    }
+
+    async function redirectTeacher() {
+      if (!client) return;
+      const { data: { session } } = await client.auth.getSession();
+      if (session?.user && await window.getAksarakuUserRole(client, session.user) === 'teacher') {
+        window.location.replace('./chat.html');
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      message.classList.add('hidden');
+      const { data, error } = await client.auth.signInWithPassword({
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+      });
+      if (error) {
+        showError('Email atau password tidak sesuai.');
+        button.disabled = false;
+        return;
+      }
+      const role = await window.getAksarakuUserRole(client, data.user);
+      if (role !== 'teacher') {
+        await client.auth.signOut();
+        showError('Akun ini tidak memiliki role teacher.');
+        button.disabled = false;
+        return;
+      }
+      window.location.replace('./chat.html');
+    });
+
+    redirectTeacher().catch(() => showError('Sesi login tidak dapat diperiksa.'));
+  </script>
+</body>
+</html>

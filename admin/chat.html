@@ -40,7 +40,7 @@
     .particle { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(139, 92, 246, 0.9) 0%, rgba(139, 92, 246, 0) 70%); }
   </style>
 </head>
-<body class="bg-workspace text-[#F3F4F6] antialiased">
+<body data-role="admin" class="bg-workspace text-[#F3F4F6] antialiased">
   <div class="flex h-screen w-full overflow-hidden">
     <div data-mobile-sidebar-overlay class="fixed inset-0 z-40 hidden bg-black/60 md:hidden"></div>
 
@@ -59,6 +59,7 @@
           <li><a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a></li>
           <li><a href="./upload.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium"><i data-lucide="file-up" class="w-4 h-4"></i>Upload Dokumen</a></li>
           <li><a href="./chat.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-700/80 text-white text-sm font-semibold shadow-inner"><i data-lucide="message-circle" class="w-4 h-4"></i>Chat</a></li>
+          <li><a href="./users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium"><i data-lucide="users" class="w-4 h-4"></i>User</a></li>
         </ul>
         <div class="mt-6 px-1"><p class="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280] mb-3">Riwayat Chat</p><div id="sessionList" class="space-y-2"></div><p id="sessionStatus" class="text-[11px] text-[#9CA3AF] mt-3"></p></div>
       </nav>
@@ -90,6 +91,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/config.js"></script>
+  <script src="../js/auth-role.js"></script>
   <script src="../js/admin-auth.js"></script>
   <script src="../js/chat.js"></script>
   <script src="../js/auth-sidebar.js"></script>
