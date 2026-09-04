@@ -1,6 +1,6 @@
 const CHUNK_SIZE = 800;
 const CHUNK_OVERLAP = 100;
-const EMBED_UPSERT_URL = 'http://localhost:3000/embed-upsert';
+const EMBED_UPSERT_URL = `${window.AKSARAKU_CONFIG.API_BASE_URL}/embed-upsert`;
 const pdfFileInput = document.getElementById('pdfFile');
 const processBtn = document.getElementById('processBtn');
 const statusOutput = document.getElementById('status');
