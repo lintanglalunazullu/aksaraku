@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="../image/logo.png" />
   <link rel="stylesheet" href="../css/brand.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.tailwindcss.css" />
   <script>
     tailwind.config = {
       theme: {
@@ -30,6 +31,11 @@
     *::-webkit-scrollbar { width: 6px; height: 6px; }
     *::-webkit-scrollbar-thumb { background-color: #2a3242; border-radius: 999px; }
     *::-webkit-scrollbar-track { background: transparent; }
+    #documentsTable_wrapper .dt-layout-row { margin: 1rem 0; }
+    #documentsTable_wrapper select, #documentsTable_wrapper input { border-radius: .5rem; border: 1px solid #334155; background: #020617; color: #e2e8f0; padding: .45rem .65rem; }
+    #documentsTable_wrapper .dt-info, #documentsTable_wrapper .dt-length, #documentsTable_wrapper .dt-search { color: #94a3b8; font-size: .8rem; }
+    #documentsTable_wrapper .dt-paging-button { color: #cbd5e1 !important; }
+    #documentsTable_wrapper .dt-paging-button.current { background: #0B2545 !important; border-color: #0B2545 !important; color: white !important; }
   </style>
 </head>
 <body class="bg-workspace text-[#F3F4F6] antialiased">
@@ -68,53 +74,69 @@
         <div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden"><a href="../pages/profile.html" data-profile-link="../pages/profile.html" data-login-link="./login.html" class="w-full h-full flex items-center justify-center"><img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" /><span data-navbar-avatar-initials>AD</span></a></div>
       </header>
 
-      <main class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 py-6">
-        <div class="max-w-5xl mx-auto">
-    <div class="mb-8 rounded-3xl border border-white/10 bg-card p-8 shadow-xl shadow-black/20">
-      <div class="mb-6">
-        <p class="text-xs uppercase tracking-[0.3em] text-[#8B8F9A]">Admin Upload</p>
-        <h1 class="mt-3 text-3xl font-bold text-white">Upload PDF & Simpan Embedding</h1>
-        <p class="mt-2 text-sm leading-relaxed text-[#9CA3AF]">
-          Unggah PDF, ekstrak teks, bagi ke chunk, dan kirim hasilnya ke backend untuk disimpan ke Supabase.
-        </p>
-      </div>
-
-      <div class="space-y-6">
-        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
-          <h2 class="text-lg font-semibold text-white">Langkah Upload</h2>
-          <ol class="mt-4 space-y-3 text-sm text-[#9CA3AF] list-decimal list-inside">
-            <li>Pilih file PDF.</li>
-            <li>Ekstrak teks dari semua halaman.</li>
-            <li>Bagi menjadi beberapa chunk supaya embedding bisa lebih akurat.</li>
-            <li>Kirim hasil ke backend untuk pembuatan vektor dan penyimpanan di Supabase.</li>
-          </ol>
-        </div>
-
-        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
-          <label class="block text-sm font-semibold text-[#D1D5DB] mb-3" for="pdfFile">Pilih file PDF</label>
-          <input id="pdfFile" type="file" accept="application/pdf" class="w-full rounded-2xl border border-white/10 bg-[#0F172A] px-4 py-3 text-sm text-white" />
-          <button id="processBtn" class="mt-4 inline-flex items-center justify-center rounded-2xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-purple-500">
-            Proses & Upload
-          </button>
-        </div>
-
-        <div class="rounded-2xl border border-white/10 bg-[#111827] p-6">
-          <h2 class="text-lg font-semibold text-white">Status</h2>
-          <pre id="status" class="mt-4 h-56 overflow-y-auto rounded-2xl bg-[#0F172A] p-4 text-sm leading-relaxed text-[#D1D5DB]"></pre>
-        </div>
-      </div>
-    </div>
+      <main class="relative z-10 flex-1 overflow-y-auto px-4 py-6 md:px-8">
+        <div class="mx-auto max-w-6xl">
+          <div class="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-6">
+            <div>
+              <p class="text-xs uppercase tracking-[0.3em] text-[#8B8F9A]">Admin Dokumen</p>
+              <h2 class="mt-3 text-3xl font-bold text-white">Daftar Dokumen</h2>
+              <p class="mt-2 text-sm text-[#9CA3AF]">Kelola dokumen sumber yang digunakan Aksaraku untuk membuat jawaban AI.</p>
+            </div>
+            <button id="newDocumentButton" type="button" class="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-purple-500">
+              <i data-lucide="file-plus-2" class="h-4 w-4"></i>Tambah dokumen
+            </button>
+          </div>
+          <p id="documentStatus" class="mt-5 hidden" role="status"></p>
+          <section class="mt-6 overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-4">
+            <div class="overflow-x-auto"><table id="documentsTable" class="w-full text-left text-sm"><thead><tr><th>Nama dokumen</th><th>Category</th><th>Jumlah chunk</th><th>Dibuat</th><th>Status</th><th>Aksi</th></tr></thead><tbody></tbody></table></div>
+          </section>
         </div>
       </main>
     </div>
   </div>
 
+  <div id="documentModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70 px-4 py-8" role="dialog" aria-modal="true" aria-labelledby="documentFormTitle">
+    <div class="mx-auto max-w-lg rounded-2xl border border-white/10 bg-[#121824] p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-4">
+        <div><p class="text-xs uppercase tracking-[0.2em] text-[#8B8F9A]">Manajemen dokumen</p><h2 id="documentFormTitle" class="mt-2 text-xl font-bold text-white">Tambah dokumen</h2></div>
+        <button id="closeDocumentModalButton" type="button" class="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Tutup modal"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+      <form id="documentForm" class="mt-6 space-y-4">
+        <input id="documentId" type="hidden" />
+        <label class="block text-sm font-semibold text-slate-300">Nama dokumen
+          <input id="documentName" type="text" placeholder="Nama akan mengikuti file PDF" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-purple-400" />
+        </label>
+        <label class="block text-sm font-semibold text-slate-300" for="documentCategory">Category
+          <select id="documentCategory" required class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-purple-400">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </label>
+        <div id="documentFileSection">
+          <label class="block text-sm font-semibold text-slate-300" for="pdfFile">File PDF
+            <input id="pdfFile" type="file" accept="application/pdf" class="mt-2 w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2.5 text-sm text-white" />
+          </label>
+          <p class="mt-2 text-xs leading-relaxed text-slate-500">PDF akan diekstrak menjadi chunk dan embedding sebelum disimpan.</p>
+          <pre id="status" class="mt-3 hidden max-h-32 overflow-y-auto rounded-lg bg-slate-950 p-3 text-xs leading-relaxed text-slate-400"></pre>
+        </div>
+        <div class="flex justify-end gap-2 border-t border-white/10 pt-4">
+          <button id="cancelDocumentButton" type="button" class="rounded-lg border border-slate-700 px-4 py-2.5 text-sm text-slate-300 hover:bg-white/5">Batal</button>
+          <button id="documentSubmitButton" type="submit" class="rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-purple-500">Upload dokumen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.3.2/js/dataTables.tailwindcss.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/auth-role.js"></script>
   <script src="../js/admin-auth.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.7.107/build/pdf.min.js"></script>
   <script src="../js/pdf-upload.js"></script>
+  <script src="../js/admin-documents.js"></script>
   <script>lucide.createIcons();</script>
   <script src="../js/auth-sidebar.js"></script>
   <script src="../js/navbar-profile.js"></script>

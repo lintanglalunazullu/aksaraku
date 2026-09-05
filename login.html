@@ -185,8 +185,8 @@
     <!-- Footer -->
     <footer class="relative z-10 px-6 md:px-8 py-5">
       <p class="text-xs text-[#4B5563]">
-        © 2024 Aksaraku Portal AI. <span class="mx-1">•</span>
-        <a href="#" class="hover:text-[#6B7280] transition-colors">Syarat &amp; Ketentuan</a>
+        © <span id="copyright-year"></span> Aksaraku Portal AI. <span class="mx-1">•</span>
+        <a href="./syarat-ketentuan.html" class="hover:text-[#6B7280] transition-colors">Syarat &amp; Ketentuan</a>
       </p>
     </footer>
 
@@ -199,6 +199,10 @@
   <script src="./js/auth-role.js"></script>
 
   <script src="./js//login.js"></script>
+
+  <script>
+    document.getElementById("copyright-year").textContent = new Date().getFullYear();
+  </script>
 
 
 </body>

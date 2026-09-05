@@ -42,7 +42,7 @@ async function extractTextFromPDF(file) {
   return allText.trim();
 }
 
-async function processPdfFile() {
+async function processPdfFile(documentName = '', category = 'public') {
   const file = pdfFileInput.files[0];
   if (!file) {
     logStatus('Silakan pilih file PDF terlebih dahulu.');
@@ -57,19 +57,29 @@ async function processPdfFile() {
     logStatus(`Dibuat ${chunks.length} chunk.`);
 
     const payload = {
-      chunks: chunks.map((chunk) => ({ text: chunk, pdf_name: file.name })),
+      chunks: chunks.map((chunk) => ({
+        text: chunk,
+        pdf_name: documentName.trim() || file.name,
+        category: category === 'private' ? 'private' : 'public',
+      })),
     };
 
     logStatus('Mengirim chunks ke server backend untuk embedding dan penyimpanan...');
     const result = await uploadChunksToBackend(payload);
     logStatus(`Selesai! ${result.length} chunk beserta embedding tersimpan di Supabase.`);
+    return result;
   } catch (error) {
     console.error(error);
     logStatus(`Terjadi kesalahan: ${error.message}`);
+    throw error;
   }
 }
 
-processBtn.addEventListener('click', processPdfFile);
+window.processPdfFile = processPdfFile;
+
+if (processBtn) {
+  processBtn.addEventListener('click', processPdfFile);
+}
 
 // 2. Fungsi unggah ke backend untuk embedding dan penyimpanan Supabase
 async function uploadChunksToBackend(payload) {

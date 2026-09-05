@@ -297,13 +297,14 @@ function appendTypingIndicator() {
     wrapper.id = "typingIndicator";
     wrapper.innerHTML = `
       <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
-        <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+        <img src="../image/logo.png" alt="Aksaraku" class="h-5 w-5 object-contain" />
       </div>
-      <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5">
-        <div class="flex items-center gap-1">
+            <div class="ai-thinking-bubble bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5">
+                <div class="flex items-center gap-2">
           <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:0ms"></span>
           <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:150ms"></span>
           <span class="w-1.5 h-1.5 rounded-full bg-[#6B7280] animate-bounce" style="animation-delay:300ms"></span>
+                    <span class="ai-thinking-label text-xs text-[#9CA3AF]">AI sedang menyusun jawaban</span>
         </div>
       </div>
     `;
@@ -317,9 +318,9 @@ function appendAiReply(text) {
     wrapper.className = "flex items-start gap-3 animate-fadeUp";
     wrapper.innerHTML = `
       <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
-        <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+        <img src="../image/logo.png" alt="Aksaraku" class="h-5 w-5 object-contain" />
       </div>
-      <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%]">
+    <div class="ai-reply-bubble bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%]">
         <p class="text-sm leading-relaxed text-[#F3F4F6] whitespace-pre-wrap"></p>
       </div>
     `;
@@ -340,9 +341,53 @@ function escapeChatHtml(text) {
 }
 
 function renderChatMarkdown(text) {
-    return escapeChatHtml(text)
+    const lines = escapeChatHtml(text).replace(/\r\n?/g, '\n').split('\n');
+    const inline = (value) => value
+        .replace(/`([^`\n]+)`/g, '<code>$1</code>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
+        .replace(/__([^_\n]+)__/g, '<strong>$1</strong>')
+        .replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    const output = [];
+    let index = 0;
+
+    while (index < lines.length) {
+        const line = lines[index].trim();
+        if (!line) {
+            index += 1;
+            continue;
+        }
+        const heading = line.match(/^#{1,6}\s+(.+)$/);
+        if (heading) {
+            output.push(`<h3>${inline(heading[1])}</h3>`);
+            index += 1;
+            continue;
+        }
+        const item = line.match(/^([-*+] |\d+[.)] |[a-zA-Z][.)] )(.*)$/);
+        if (item) {
+            const ordered = /^\d|^[a-zA-Z]/.test(item[1]);
+            const alpha = /^[a-zA-Z]/.test(item[1]);
+            const items = [];
+            while (index < lines.length) {
+                const current = lines[index].trim();
+                const match = current.match(ordered
+                    ? /^(?:\d+[.)]|[a-zA-Z][.)]) (.*)$/
+                    : /^[-*+] (.*)$/);
+                if (!match) break;
+                items.push(`<li>${inline(match[1])}</li>`);
+                index += 1;
+            }
+            output.push(`<${ordered ? 'ol' : 'ul'}${alpha ? ' class="chat-list-alpha"' : ''}>${items.join('')}</${ordered ? 'ol' : 'ul'}>`);
+            continue;
+        }
+        const paragraph = [line];
+        index += 1;
+        while (index < lines.length && lines[index].trim() && !/^#{1,6}\s+/.test(lines[index].trim()) && !/^([-*+] |\d+[.)] |[a-zA-Z][.)] )/.test(lines[index].trim())) {
+            paragraph.push(lines[index].trim());
+            index += 1;
+        }
+        output.push(`<p>${inline(paragraph.join(' '))}</p>`);
+    }
+    return `<div class="chat-markdown">${output.join('')}</div>`;
 }
 
 function removeAccuracyNotice(text) {
@@ -387,9 +432,9 @@ function appendAiReplyWithSources(answer, sources) {
     wrapper.className = "flex items-start gap-3 animate-fadeUp";
     wrapper.innerHTML = `
       <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-md shadow-purple-900/30">
-        <i data-lucide="book-open" class="w-4.5 h-4.5 text-white"></i>
+        <img src="../image/logo.png" alt="Aksaraku" class="h-5 w-5 object-contain" />
       </div>
-      <div class="bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%] space-y-4">
+    <div class="ai-reply-bubble bg-bubbleAi border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%] space-y-4">
         <div>
           <p class="text-sm leading-relaxed text-[#F3F4F6] whitespace-pre-wrap"></p>
         </div>
@@ -407,9 +452,17 @@ function appendAiReplyWithSources(answer, sources) {
 }
 
 async function fetchChatResponse(question) {
+    const session = await getSupabaseSession();
+    if (!session?.access_token) {
+        throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
+    }
+
     const response = await fetch(BACKEND_CHAT_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ question }),
     });
 

@@ -129,3 +129,56 @@
   width: 100px;
   height: auto;
 }
+
+.chat-markdown > :first-child { margin-top: 0; }
+.chat-markdown > :last-child { margin-bottom: 0; }
+.chat-markdown p { margin: 0.65rem 0; }
+.chat-markdown h3 { margin: 1rem 0 0.45rem; color: #fff; font-size: 1rem; font-weight: 700; line-height: 1.45; }
+.chat-markdown strong { color: #fff; font-weight: 700; }
+.chat-markdown em { color: #d1d5db; }
+.chat-markdown code { border-radius: .25rem; background: rgba(255,255,255,.08); padding: .1rem .3rem; color: #c4e4ff; font-size: .9em; }
+.chat-markdown ul, .chat-markdown ol { margin: .65rem 0; padding-left: 1.35rem; list-style-position: outside !important; }
+.chat-markdown ul { list-style-type: disc !important; }
+.chat-markdown ol { list-style-type: decimal !important; }
+.chat-markdown ol.chat-list-alpha { list-style-type: lower-alpha !important; }
+.chat-markdown li { margin: .25rem 0; padding-left: .2rem; }
+
+@keyframes aiReplyEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes aiThinkingPulse {
+  0%, 100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.ai-reply-bubble {
+  animation: aiReplyEnter 0.35s ease-out both;
+}
+
+.ai-thinking-bubble {
+  animation: aiThinkingPulse 1.8s ease-in-out infinite;
+}
+
+.ai-thinking-label {
+  animation: aiThinkingPulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-reply-bubble,
+  .ai-thinking-bubble,
+  .ai-thinking-label {
+    animation: none;
+  }
+}
