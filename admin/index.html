@@ -100,20 +100,20 @@
                     </div>
                     <div class="leading-tight">
                         <p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p>
-                        <p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">AI MENTOR</p>
+                        <p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">ADMIN PORTAL</p>
                     </div>
                 </div>
 
-                <a href="./chat.html"
-                    class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30">
-                    <i data-lucide="message-circle-plus" class="w-4 h-4"></i>
+                <button id="newResearchBtn" type="button"
+                    class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-700 hover:bg-purple-700 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
                     Chat Baru
-                </a>
+                </button>
             </div>
 
             <!-- Main nav -->
-            <nav class="px-3 mt-2 flex-1">
-                <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu</p>
+            <nav class="px-3 mt-2 flex-1 flex flex-col min-h-0">
+                <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu Admin</p>
                 <ul class="space-y-1">
                     <li>
                         <a href="./index.html"
@@ -144,6 +144,11 @@
                         </a>
                     </li>
                 </ul>
+                <div class="mt-6 px-1 flex-1 min-h-0 flex flex-col">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280] mb-3">Riwayat Chat</p>
+                    <div id="sessionList" class="space-y-2 flex-1 min-h-0 overflow-y-auto pr-1"></div>
+                    <p id="sessionStatus" class="text-[11px] text-[#9CA3AF] mt-3 shrink-0"></p>
+                </div>
             </nav>
 
             <!-- Bottom nav -->
@@ -184,8 +189,7 @@
                 <div class="flex items-center gap-3 md:gap-4">
                     <div data-navbar-avatar
                         class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
-                        <a href="../pages/profile.html" data-profile-link="../pages/profile.html"
-                            data-login-link="./login.html" class="w-full h-full flex items-center justify-center">
+                        <a href="./profile.html" data-profile-link="./profile.html" data-login-link="./login.html" class="w-full h-full flex items-center justify-center">
                             <img data-navbar-avatar-img src="" alt="User avatar"
                                 class="hidden w-full h-full object-cover" />
                             <span data-navbar-avatar-initials class="">AD</span>
@@ -378,6 +382,8 @@
     <script src="../js/auth-sidebar.js"></script>
     <script src="../js/navbar-profile.js"></script>
     <script src="../js/mobile-sidebar.js"></script>
+    <script src="../js/admin-sidebar-chat.js"></script>
+    <script src="../js/logout-modal.js"></script>
 </body>
 
 </html>

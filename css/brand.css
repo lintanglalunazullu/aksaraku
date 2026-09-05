@@ -68,6 +68,18 @@
   --tw-gradient-to: #0B2545 !important;
 }
 
+#newResearchBtn {
+  background-color: #123A63 !important;
+}
+
+#newResearchBtn:hover {
+  background-color: #041c35 !important;
+}
+
+#newResearchBtn:active {
+  background-color: #041c35 !important;
+}
+
 [class~="bg-purple-500\/10"],
 [class~="bg-purple-500\/15"],
 [class~="bg-purple-900\/50"],

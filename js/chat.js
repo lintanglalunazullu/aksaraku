@@ -26,9 +26,25 @@ function getSessionStorageKey() {
 const BACKEND_CHAT_URL = `${window.AKSARAKU_CONFIG.API_BASE_URL}/chat`;
 
 // Enable / disable send button based on input content
+function autosizeChatInput() {
+  if (!chatInput) return;
+  chatInput.style.height = "auto";
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + "px";
+}
+
 chatInput.addEventListener("input", () => {
-    sendBtn.disabled = chatInput.value.trim().length === 0;
+  sendBtn.disabled = chatInput.value.trim().length === 0;
+  autosizeChatInput();
 });
+
+chatInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    if (chatInput.value.trim()) chatForm.requestSubmit();
+  }
+});
+
+autosizeChatInput();
 
 function formatTime() {
     const now = new Date();
@@ -80,7 +96,7 @@ async function loadSessionList() {
     }
 
     if (!data || data.length === 0) {
-        sessionList.innerHTML = '<p class="text-xs leading-relaxed text-[#9CA3AF]">Belum ada sesi chat. Klik New Research untuk mulai.</p>';
+        sessionList.innerHTML = '<p class="text-xs leading-relaxed text-[#9CA3AF]">Belum ada sesi chat. Klik Chat Baru untuk mulai.</p>';
         return;
     }
 
@@ -499,6 +515,7 @@ async function handleSend(text) {
   }
 
   chatInput.value = "";
+  autosizeChatInput();
   sendBtn.disabled = true;
   scrollToBottom();
 
@@ -541,7 +558,7 @@ document.querySelectorAll(".suggestion-pill").forEach((pill) => {
     });
 });
 
-// New Research button
+// Chat Baru button
 document.getElementById("newResearchBtn").addEventListener("click", async () => {
     clearChatThread();
     currentSessionId = null;

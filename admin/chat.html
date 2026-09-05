@@ -52,10 +52,10 @@
           <div class="brand-logo-container"><img src="../image/logo.png" alt="Aksaraku" class="brand-logo" /></div>
           <div class="leading-tight"><p class="text-[13px] font-extrabold tracking-wide text-white">AKSARAKU</p><p class="text-[10px] font-semibold tracking-[0.18em] text-purple-400">ADMIN PORTAL</p></div>
         </div>
-        <button id="newResearchBtn" type="button" class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30"><i data-lucide="plus" class="w-4 h-4"></i>Chat Baru</button>
+        <button id="newResearchBtn" type="button" class="mt-5 w-full flex items-center justify-center gap-1.5 rounded-lg bg-purple-700 hover:bg-purple-700 transition-colors text-sm font-semibold py-2.5 shadow-md shadow-purple-900/30"><i data-lucide="plus" class="w-4 h-4"></i>Chat Baru</button>
       </div>
 
-      <nav class="px-3 mt-2 flex-1">
+      <nav class="px-3 mt-2 flex-1 flex flex-col min-h-0">
         <p class="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]">Menu Admin</p>
         <ul class="space-y-1">
           <li><a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a></li>
@@ -63,7 +63,7 @@
           <li><a href="./chat.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-purple-700/80 text-white text-sm font-semibold shadow-inner"><i data-lucide="message-circle" class="w-4 h-4"></i>Chat</a></li>
           <li><a href="./users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9CA3AF] hover:bg-white/5 hover:text-white transition-colors text-sm font-medium"><i data-lucide="users" class="w-4 h-4"></i>User</a></li>
         </ul>
-        <div class="mt-6 px-1"><p class="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280] mb-3">Riwayat Chat</p><div id="sessionList" class="space-y-2"></div><p id="sessionStatus" class="text-[11px] text-[#9CA3AF] mt-3"></p></div>
+        <div class="mt-6 px-1 flex-1 min-h-0 flex flex-col"><p class="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280] mb-3">Riwayat Chat</p><div id="sessionList" class="space-y-2 flex-1 min-h-0 overflow-y-auto pr-1"></div><p id="sessionStatus" class="text-[11px] text-[#9CA3AF] mt-3 shrink-0"></p></div>
       </nav>
 
       <div class="px-3 pb-5 border-t border-white/5 pt-3">
@@ -78,7 +78,7 @@
       <div class="pointer-events-none absolute inset-0 overflow-hidden"><span class="particle animate-twinkle" style="width:6px;height:6px;top:12%;left:18%"></span><span class="particle animate-twinkle" style="width:4px;height:4px;top:24%;left:62%;animation-delay:1.2s"></span><span class="particle animate-twinkle" style="width:5px;height:5px;top:40%;left:85%;animation-delay:2.1s"></span><span class="particle animate-twinkle" style="width:3px;height:3px;top:65%;left:8%;animation-delay:.6s"></span></div>
       <header class="relative z-10 flex items-center justify-between px-5 md:px-8 h-16 shrink-0 border-b border-white/5">
         <div class="flex items-center gap-3"><button id="mobileMenuBtn" data-mobile-menu-toggle class="md:hidden text-[#9CA3AF] hover:text-white"><i data-lucide="menu" class="w-5 h-5"></i></button><h1 class="text-lg font-bold text-white">Chat Admin</h1></div>
-        <div class="flex items-center gap-4"><div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden"><a href="../pages/profile.html" data-profile-link="../pages/profile.html" data-login-link="./login.html" class="w-full h-full flex items-center justify-center"><img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" /><span data-navbar-avatar-initials>AD</span></a></div></div>
+        <div class="flex items-center gap-4"><div data-navbar-avatar class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden"><a href="./profile.html" data-profile-link="./profile.html" data-login-link="./login.html" class="w-full h-full flex items-center justify-center"><img data-navbar-avatar-img src="" alt="User avatar" class="hidden w-full h-full object-cover" /><span data-navbar-avatar-initials>AD</span></a></div></div>
       </header>
 
       <main id="chatThread" class="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-40">
@@ -87,7 +87,7 @@
         </div>
       </main>
 
-      <div class="absolute bottom-0 left-0 right-0 z-20 px-4 md:px-8 pb-4 pt-8 bg-gradient-to-t from-workspace via-workspace/95 to-transparent"><div class="max-w-3xl mx-auto"><form id="chatForm" class="flex items-center gap-2 rounded-xl bg-inputbar border border-gray-700/70 px-3 py-2 shadow-xl shadow-black/30 focus-within:border-purple-500/50 transition-colors"><button type="button" class="text-[#9CA3AF] hover:text-white transition-colors p-1.5 shrink-0" aria-label="Attach file"><i data-lucide="paperclip" class="w-[18px] h-[18px]"></i></button><input id="chatInput" type="text" autocomplete="off" placeholder="Tanya Aksaraku apa saja..." class="flex-1 bg-transparent outline-none text-sm text-[#F3F4F6] placeholder:text-[#6B7280] py-1.5" /><button type="button" class="text-[#9CA3AF] hover:text-white transition-colors p-1.5 shrink-0" aria-label="Voice input"><i data-lucide="mic" class="w-[18px] h-[18px]"></i></button><button type="submit" id="sendBtn" class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed" disabled><i data-lucide="arrow-up" class="w-4 h-4 text-white"></i></button></form><p class="text-center text-[11px] text-[#6B7280] mt-2.5">Aksaraku dapat membuat kesalahan. Pertimbangkan untuk memeriksa informasi penting.</p></div></div>
+      <div class="absolute bottom-0 left-0 right-0 z-20 px-4 md:px-8 pb-4 pt-8 bg-gradient-to-t from-workspace via-workspace/95 to-transparent"><div class="max-w-3xl mx-auto"><form id="chatForm" class="flex items-center gap-2 rounded-xl bg-inputbar border border-gray-700/70 px-3 py-2 shadow-xl shadow-black/30 focus-within:border-purple-500/50 transition-colors"><textarea id="chatInput" rows="1" placeholder="Tanya Aksaraku apa saja..." class="flex-1 resize-none bg-transparent outline-none text-sm leading-relaxed text-[#F3F4F6] placeholder:text-[#6B7280] py-1.5 overflow-y-auto max-h-32"></textarea><button type="submit" id="sendBtn" class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed" disabled><i data-lucide="arrow-up" class="w-4 h-4 text-white"></i></button></form><p class="text-center text-[11px] text-[#6B7280] mt-2.5">Aksaraku dapat membuat kesalahan. Pertimbangkan untuk memeriksa informasi penting.</p></div></div>
     </div>
   </div>
 
@@ -99,5 +99,6 @@
   <script src="../js/auth-sidebar.js"></script>
   <script src="../js/navbar-profile.js"></script>
   <script src="../js/mobile-sidebar.js"></script>
+  <script src="../js/logout-modal.js"></script>
 </body>
 </html>

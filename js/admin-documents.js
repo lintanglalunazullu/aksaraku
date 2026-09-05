@@ -61,7 +61,6 @@
     formTitle.textContent = item ? 'Ubah dokumen' : 'Tambah dokumen';
     submitButton.textContent = item ? 'Simpan perubahan' : 'Upload dokumen';
     fileSection.classList.toggle('hidden', !!item);
-    fileInput.required = !item;
     modal.classList.remove('hidden');
     documentName.focus();
     document.body.classList.add('overflow-hidden');
