@@ -27,6 +27,8 @@
     ],
   });
   const status = document.getElementById('status');
+  const deleteUserButton = document.getElementById('deleteUserButton');
+  const apiBaseUrl = window.AKSARAKU_CONFIG.API_BASE_URL;
   const fields = {
     email: document.getElementById('email'),
     password: document.getElementById('password'),
@@ -54,6 +56,7 @@
     editingProfileId = profile?.id || null;
     const passwordField = document.getElementById('passwordField');
     const roleHint = document.getElementById('roleHint');
+    deleteUserButton.classList.toggle('hidden', !profile);
     passwordField.classList.toggle('hidden', !!profile);
     roleHint.textContent = profile ? 'Role dapat diubah oleh admin.' : 'Pilih role akun saat dibuat.';
     document.getElementById('formTitle').textContent = profile ? 'Edit profil' : 'Tambah profil';
@@ -140,6 +143,31 @@
 
   document.getElementById('newUserButton').addEventListener('click', () => openForm());
   document.getElementById('cancelButton').addEventListener('click', () => form.classList.add('hidden'));
+  deleteUserButton.addEventListener('click', async () => {
+    if (!editingProfileId) return;
+    const profile = profiles.find((item) => item.id === editingProfileId);
+    if (!profile) return;
+    const confirmed = window.confirm(`Hapus akun ${profile.email || 'ini'} secara permanen?`);
+    if (!confirmed) return;
+
+    deleteUserButton.disabled = true;
+    try {
+      const response = await fetch(`${apiBaseUrl}/admin/users/${encodeURIComponent(editingProfileId)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${access.session.access_token}` },
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.detail || result.error || 'Gagal menghapus akun.');
+      showStatus('Akun berhasil dihapus.');
+      form.classList.add('hidden');
+      editingProfileId = null;
+      await loadProfiles();
+    } catch (error) {
+      showStatus(`Gagal menghapus akun: ${error.message}`, true);
+    } finally {
+      deleteUserButton.disabled = false;
+    }
+  });
   document.getElementById('roleFilters').addEventListener('click', (event) => {
     const button = event.target.closest('[data-role-filter]');
     if (!button) return;
