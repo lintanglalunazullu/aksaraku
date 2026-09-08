@@ -11,6 +11,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const sessionList = document.getElementById('sessionList');
 const sessionStatus = document.getElementById('sessionStatus');
+const chatHistoryPanel = document.getElementById('chatHistoryPanel');
 const CHAT_SESSIONS_TABLE = 'chat_sessions';
 const CHAT_MESSAGES_TABLE = 'chat_messages';
 const DEFAULT_SESSION_TITLE = 'Sesi chat baru';
@@ -280,10 +281,10 @@ async function loadSessionMessages(sessionId) {
 async function initChatSessionHistory() {
     const session = await getSupabaseSession();
     if (!session || !session.user) {
-        renderSessionStatus('Login untuk menyimpan riwayat chat.');
         return;
     }
 
+    chatHistoryPanel?.classList.remove('hidden');
     currentUserId = session.user.id;
     await loadSessionList();
     const sessionId = await getCurrentSessionId();
