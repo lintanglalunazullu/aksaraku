@@ -280,7 +280,7 @@ async function loadSessionMessages(sessionId) {
 async function initChatSessionHistory() {
     const session = await getSupabaseSession();
     if (!session || !session.user) {
-        renderSessionStatus('Silakan login Supabase agar riwayat chat tersimpan.');
+        renderSessionStatus('Login untuk menyimpan riwayat chat.');
         return;
     }
 
@@ -469,16 +469,14 @@ function appendAiReplyWithSources(answer, sources) {
 
 async function fetchChatResponse(question) {
     const session = await getSupabaseSession();
-    if (!session?.access_token) {
-        throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
+    const headers = { "Content-Type": "application/json" };
+    if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
     }
 
     const response = await fetch(BACKEND_CHAT_URL, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
-        },
+        headers,
         body: JSON.stringify({ question }),
     });
 
