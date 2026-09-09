@@ -3,7 +3,17 @@
   "builds": [
     {
       "src": "**/*",
-      "use": "@now/static"
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/404.html",
+      "status": 404
     }
   ]
 }
