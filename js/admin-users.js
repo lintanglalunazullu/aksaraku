@@ -32,6 +32,8 @@
   const fields = {
     email: document.getElementById('email'),
     password: document.getElementById('password'),
+    passwordField: document.getElementById('passwordField'),
+    passwordHint: document.getElementById('passwordHint'),
     fullName: document.getElementById('fullName'),
     provider: document.getElementById('provider'),
     role: document.getElementById('role'),
@@ -57,7 +59,16 @@
     const passwordField = document.getElementById('passwordField');
     const roleHint = document.getElementById('roleHint');
     deleteUserButton.classList.toggle('hidden', !profile);
-    passwordField.classList.toggle('hidden', !!profile);
+    const canEditPassword = !!profile
+      && profile.provider === 'email'
+      && ['admin', 'teacher'].includes(profile.role);
+    passwordField.classList.toggle('hidden', !!profile && !canEditPassword);
+    fields.password.value = '';
+    fields.password.required = !profile;
+    fields.password.placeholder = profile ? 'Kosongkan jika tidak diubah' : 'Minimal 6 karakter';
+    fields.passwordHint.textContent = profile
+      ? 'Hanya untuk akun admin atau teacher yang login melalui email.'
+      : 'Akun Auth dan profil dibuat otomatis.';
     roleHint.textContent = profile ? 'Role dapat diubah oleh admin.' : 'Pilih role akun saat dibuat.';
     document.getElementById('formTitle').textContent = profile ? 'Edit profil' : 'Tambah profil';
     fields.email.value = profile?.email || '';
@@ -65,7 +76,6 @@
     fields.provider.value = profile?.provider || 'email';
     fields.role.value = profile?.role || 'user';
     fields.email.disabled = !!profile;
-    fields.password.required = !profile;
     fields.provider.disabled = !profile;
     fields.role.disabled = false;
   }
@@ -127,7 +137,41 @@
         showStatus('Profil yang akan diedit tidak ditemukan.', true);
         return;
       }
+      if (fields.password.value) {
+        const canEditPassword = profile.provider === 'email'
+          && ['admin', 'teacher'].includes(profile.role);
+        if (!canEditPassword) {
+          showStatus('Password hanya dapat diubah untuk admin atau teacher dengan provider email.', true);
+          return;
+        }
+        if (fields.password.value.length < 6) {
+          showStatus('Password minimal 6 karakter.', true);
+          return;
+        }
+      }
       ({ error } = await client.from('profiles').update(profile).eq('id', profile.id));
+      if (!error && fields.password.value) {
+        try {
+          if (profile.id === access.session.user.id) {
+            const result = await client.auth.updateUser({ password: fields.password.value });
+            if (result.error) throw result.error;
+          } else {
+            const response = await fetch(`${apiBaseUrl}/admin/users/${encodeURIComponent(profile.id)}/password`, {
+              method: 'PATCH',
+              headers: {
+                Authorization: `Bearer ${access.session.access_token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ password: fields.password.value }),
+            });
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(result.detail || result.error || 'Gagal mengubah password.');
+          }
+        } catch (passwordError) {
+          showStatus(`Profil tersimpan, tetapi password gagal diubah: ${passwordError.message}`, true);
+          return;
+        }
+      }
     }
     if (error) {
       const message = error.code === 'over_email_send_rate_limit'
